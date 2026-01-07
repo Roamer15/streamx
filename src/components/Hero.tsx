@@ -111,12 +111,14 @@ const Hero = () => {
             />
 
             {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-linear-to-r from-black via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-black via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black via-black/1 to-transparent" />
+          
           </div>
         ))}
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end px-4 md:px-8 lg:px-16 z-10 pb-24 md:pb-20">
+        <div className="absolute inset-0 flex flex-col justify-end px-4 md:px-8 lg:px-16 z-10 pb-0 md:pb-0">
           <div className="max-w-2xl">
             {/* Movie Title */}
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
@@ -129,18 +131,15 @@ const Hero = () => {
                 <span className="bg-red-600 px-3 py-1 rounded-full font-semibold">
                   {currentMovie?.vote_average.toFixed(1)} / 10
                 </span>
-                <span>{genreMap[currentMovie?.id]?.join(" / ")}</span>
+                <span>{genreMap[currentMovie?.id]?.join(" | ")}</span>
               </div>
 
-              {/* Description */}
-              <p className="text-sm md:text-base text-gray-300 max-w-md leading-relaxed hidden md:block">
-                {currentMovie?.overview}
-              </p>
+      
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-3 mb-8">
-              <button className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+              {/* <button className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -150,22 +149,7 @@ const Hero = () => {
                 </svg>
                 Play Now
               </button>
-              <button className="bg-gray-700 hover:bg-gray-600 text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 5a2 2 0 012-2h6a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"
-                  />
-                </svg>
-                Info
-              </button>
+              */}
             </div>
           </div>
         </div>
@@ -216,7 +200,7 @@ const Hero = () => {
         </button>
 
         {/* Dots Indicator */}
-        <div className="absolute bottom-4 right-4 z-20 flex gap-2">
+        <div className="absolute bottom-4 right-8 md:right-4 z-20 flex gap-2">
           {movies.map((_, index) => (
             <button
               key={index}
