@@ -1,10 +1,11 @@
 import Hero from "../components/Hero";
+import LatestMovies from "../components/LatestMovies";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      
+      <LatestMovies />
       {/* Additional sections will go here */}
       <div className="p-6 md:p-8">
         <section>

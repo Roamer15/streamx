@@ -6,9 +6,13 @@ import { genreConversion } from "../services/genreConversion";
 
 const Hero = () => {
   const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`;
-  const { movies: heroMovies, loading, error } = useFetchMovies(latestMoviesUrl);
+  const {
+    movies: heroMovies,
+    loading,
+    error,
+  } = useFetchMovies(latestMoviesUrl);
 
-  const movies: Movie[] = heroMovies;
+  const movies: Movie[] = heroMovies.slice(0, 10);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -16,7 +20,7 @@ const Hero = () => {
   // Auto-rotate carousel every 7 seconds (pauses on hover)
   useEffect(() => {
     if (isHovering || movies.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % movies.length);
     }, 7000);
@@ -87,7 +91,7 @@ const Hero = () => {
       </div>
     );
   }
-  return(
+  return (
     <div
       className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950"
       onMouseEnter={() => setIsHovering(true)}
@@ -112,8 +116,7 @@ const Hero = () => {
 
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-linear-to-r from-black via-black/20 to-transparent" />
-              <div className="absolute inset-0 bg-linear-to-t from-black via-black/1 to-transparent" />
-          
+            <div className="absolute inset-0 bg-linear-to-t from-black via-black/1 to-transparent" />
           </div>
         ))}
 
@@ -133,8 +136,6 @@ const Hero = () => {
                 </span>
                 <span>{genreMap[currentMovie?.id]?.join(" | ")}</span>
               </div>
-
-      
             </div>
 
             {/* Action Buttons */}
