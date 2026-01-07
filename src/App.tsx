@@ -3,14 +3,16 @@ import Navbar from "./components/navbar";
 import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes, Route } from "react-router";
 import SidebarProvider from "./context/SidebarContext";
+import { DetailMovieProvider } from "./context/DetailMovieProvider";
 import { useSidebar } from "./hooks/useSidebar";
 import Home from "./pages/Home";
+import Footer from "./components/Footer";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
 
   return (
-    <>
+    <DetailMovieProvider>
       <Navbar />
       <Sidebar />
       <main
@@ -20,22 +22,26 @@ function AppContent() {
       >
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/details/:id" element={<div className="p-6">Movie Details</div>}/>
           <Route path="/movies" element={<div className="p-6">Movies Page Coming Soon</div>} />
           <Route path="/series" element={<div className="p-6">Series Page Coming Soon</div>} />
           <Route path="/favourites" element={<div className="p-6">Favourites Page Coming Soon</div>} />
           <Route path="/search" element={<div className="p-6">Search Results Page Coming Soon</div>} />
         </Routes>
       </main>
-    </>
+      <Footer></Footer>
+    </DetailMovieProvider>
   );
 }
 
 function App() {
   return (
     <SidebarProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <DetailMovieProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </DetailMovieProvider>
     </SidebarProvider>
   );
 }
