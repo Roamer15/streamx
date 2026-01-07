@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
+import React from "react";
 
 const Sidebar = () => {
   const { isSidebarOpen, closeSidebar } = useSidebar();
@@ -57,4 +58,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default React.memo(Sidebar);

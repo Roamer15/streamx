@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useCallback, memo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { type Movie } from "../types/media.types";
 import MovieCard from "./MovieCard";
@@ -9,7 +9,7 @@ interface CarouselProps {
     onMovieClick?: (movie: Movie) => void;
 }
 
-const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
+const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
   const latestMoviesUrl = url;
   const { movies: LatestMovies, loading, error } = useFetchMovies(latestMoviesUrl);
 
@@ -17,7 +17,7 @@ const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: "left" | "right") => {
+  const scroll = useCallback((direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -28,7 +28,11 @@ const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
         : container.scrollLeft + scrollAmount;
 
     container.scrollLeft = newPosition;
-  };
+  }, []);
+
+  const handleMovieClick = useCallback((movie: Movie) => {
+    onMovieClick?.(movie);
+  }, [onMovieClick]);
 
   if (loading) {
     return (
@@ -66,7 +70,7 @@ const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
       {/* Mobile Grid View */}
       <div className="md:hidden grid grid-cols-3 gap-2">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} width="w-full" onMovieClick={onMovieClick}/>
+          <MovieCard key={movie.id} movie={movie} width="w-full" onMovieClick={handleMovieClick}/>
         ))}
       </div>
 
@@ -80,7 +84,7 @@ const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
           style={{ scrollBehavior: "smooth" }}
         >
           {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} onMovieClick={onMovieClick}/>
+            <MovieCard key={movie.id} movie={movie} onMovieClick={handleMovieClick}/>
           ))}
         </div>
 
@@ -127,6 +131,8 @@ const Carousel = ({title, url, onMovieClick}: CarouselProps) => {
       </div>
     </div>
   );
-};
+});
+
+Carousel.displayName = "Carousel";
 
 export default Carousel;

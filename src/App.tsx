@@ -38,11 +38,9 @@ function AppContent() {
 function App() {
   return (
     <SidebarProvider>
-      <DetailMovieProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </DetailMovieProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </SidebarProvider>
   );
 }

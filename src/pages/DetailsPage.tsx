@@ -27,6 +27,32 @@ export default function DetailsPage() {
   const [runtime, setRuntime] = useState<number | null>(null);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
 
+  // Fetch Movie Details when selectedMovie is not available
+  useEffect(() => {
+    if (selectedMovie && id && parseInt(id) === selectedMovie.id) {
+      return; // Use context selectedMovie if it matches URL id
+    }
+
+    if (!id) return;
+
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setSelectedMovie(data);
+      } catch (error) {
+        console.error("Error fetching movie details:", error);
+      }
+    };
+
+    fetchMovieDetails();
+  }, [id, selectedMovie, setSelectedMovie]);
+
   // Fetch Cast Data
   useEffect(() => {
     if (!id) return;
@@ -80,22 +106,6 @@ export default function DetailsPage() {
       watchlist.some((item: Movie) => item.id === selectedMovie.id)
     );
   }, [selectedMovie]);
-
-  //   const handleAddToWatchlist = () => {
-  //     if (!selectedMovie) return;
-
-  //     const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
-  //     const isMovieInWatchlist = watchlist.some((item: Movie) => item.id === selectedMovie.id);
-
-  //     if (!isMovieInWatchlist) {
-  //       watchlist.push(selectedMovie);
-  //       localStorage.setItem("watchlist", JSON.stringify(watchlist));
-  //       setIsInWatchlist(true);
-  //       alert(`✓ Added to watchlist: ${selectedMovie.title}`);
-  //     } else {
-  //       alert(`Movie is already in the watchlist: ${selectedMovie.title}`);
-  //     }
-  //   };
 
   const handleAddToWatchlist = () => {
     if (!selectedMovie) return;

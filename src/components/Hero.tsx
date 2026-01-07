@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { API_KEY, BASE_URL, IMAGE_PATH } from "../services/api";
 import { type Movie } from "../types/media.types";
@@ -12,8 +12,7 @@ const Hero = () => {
     error,
   } = useFetchMovies(latestMoviesUrl);
 
-  const movies: Movie[] = heroMovies.slice(0, 10);
-
+const movies:Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -31,18 +30,24 @@ const Hero = () => {
   const [genreMap, setGenreMap] = useState<Record<number, string[]>>({});
 
   useEffect(() => {
+    if (movies.length === 0) return;
+
+    let isMounted = true;
     async function loadGenres() {
       const entries = await Promise.all(
-        movies.map(async (movie) => [
-          movie.id,
-          await genreConversion(movie.genre_ids),
-        ])
+        movies.map(async (movie) => {
+          const names = await genreConversion(movie.genre_ids);
+          return [movie.id, names];
+        })
       );
 
-      setGenreMap(Object.fromEntries(entries));
+      if (isMounted) {
+        setGenreMap(Object.fromEntries(entries));
+      }
     }
 
     loadGenres();
+    return () => { isMounted = false; };
   }, [movies]);
 
   const goToSlide = (index: number) => {

@@ -1,17 +1,18 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const Navbar = () => {
   const { toggleSidebar } = useSidebar();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
-  };
+  }, [searchQuery, navigate]);
 
   return (
     <>

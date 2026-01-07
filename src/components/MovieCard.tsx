@@ -1,3 +1,4 @@
+import { memo, useCallback } from "react";
 import { IMAGE_PATH } from "../services/api";
 import { type Movie } from "../types/media.types";
 
@@ -7,10 +8,14 @@ interface MovieCardProps {
   onMovieClick?: (movie: Movie) => void;
 }
 
-const MovieCard = ({ movie, width = "w-27 md:w-45", onMovieClick }: MovieCardProps) => {
+const MovieCard = memo(({ movie, width = "w-27 md:w-45", onMovieClick }: MovieCardProps) => {
+  const handleClick = useCallback(() => {
+    onMovieClick?.(movie);
+  }, [movie, onMovieClick]);
+
   return (
     <div
-      onClick={() => onMovieClick?.(movie)}
+      onClick={handleClick}
       className={`${width} shrink-0 group cursor-pointer transition-transform duration-300 hover:scale-105`}
     >
       {/* Movie Poster Card */}
@@ -38,6 +43,8 @@ const MovieCard = ({ movie, width = "w-27 md:w-45", onMovieClick }: MovieCardPro
       </div>
     </div>
   );
-};
+});
+
+MovieCard.displayName = "MovieCard";
 
 export default MovieCard;
