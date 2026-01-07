@@ -4,16 +4,26 @@ import { fetchMovies } from '../services/api'
 const useFetchMovies = (url: string) => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     const getMovies = (url: string) => {
-        fetchMovies(url).then(data => {
-            if (data) {
-                setMovies(data)
-                setLoading(false)
-            }
-            setError(error)
-        })
+        setLoading(true);
+        setError(null);
+        
+        fetchMovies(url)
+            .then(data => {
+                if (data) {
+                    setMovies(data);
+                    setError(null);
+                }
+            })
+            .catch((err) => {
+                setError(err instanceof Error ? err.message : 'Failed to fetch movies');
+                setMovies([]);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
 
     useEffect(() => {

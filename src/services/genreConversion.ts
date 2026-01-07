@@ -1,25 +1,25 @@
 import type { GenreData } from "../types/media.types";
-import { BASE_URL } from "./api";
+import { API_KEY, BASE_URL } from "./api";
 
-async function fetchGenres(){
-  try {
-   
-    const response = await fetch(`${BASE_URL}/genre/movie/list?language=en`);
-      if(!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const genres =  await response.json()
-        return genres
-  } catch (error) {
+let cachedGenres: GenreData[] | null = null;
 
-        console.error('Error fetching movies', error)
+export async function fetchGenres(): Promise<GenreData[]> {
+  const response = await fetch(`${BASE_URL}/genre/movie/list?language=en&api_key=${API_KEY}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  const data = await response.json();
+  return data.genres;
 }
 
-export default function genreConversion(ids: number[]){
-    const fetchedGenres: GenreData[] = fetchGenres();
-    for(){
-      
-    }
+export async function genreConversion(ids: number[]): Promise<string[]> {
+  // Use cached genres to avoid repeated API calls
+  if (!cachedGenres) {
+    cachedGenres = await fetchGenres();
+  }
 
+  return ids
+    .map((id) => cachedGenres!.find((g) => g.id === id)?.name)
+    .filter((name): name is string => Boolean(name));
 }

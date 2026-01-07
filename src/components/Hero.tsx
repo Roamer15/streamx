@@ -1,27 +1,45 @@
 import { useState, useEffect } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
-import { API_KEY, BASE_URL } from "../services/api";
+import { API_KEY, BASE_URL, IMAGE_PATH } from "../services/api";
 import { type Movie } from "../types/media.types";
+import { genreConversion } from "../services/genreConversion";
 
 const Hero = () => {
-  // Sample movie data - in a real app, this would come from an API
-  const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`
-  const {movies: heroMovies, error, loading} = useFetchMovies(latestMoviesUrl)
-  console.log(heroMovies)
+  const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`;
+  const { movies: heroMovies, loading, error } = useFetchMovies(latestMoviesUrl);
 
-  const movies: Movie[] = heroMovies
+  const movies: Movie[] = heroMovies;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Auto-rotate carousel every 5 seconds
+  // Auto-rotate carousel every 7 seconds (pauses on hover)
   useEffect(() => {
+    if (isHovering || movies.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % movies.length);
-    }, 5000);
+    }, 7000);
 
     return () => clearInterval(interval);
-  }, [movies.length]);
+  }, [movies.length, isHovering]);
+
+  const [genreMap, setGenreMap] = useState<Record<number, string[]>>({});
+
+  useEffect(() => {
+    async function loadGenres() {
+      const entries = await Promise.all(
+        movies.map(async (movie) => [
+          movie.id,
+          await genreConversion(movie.genre_ids),
+        ])
+      );
+
+      setGenreMap(Object.fromEntries(entries));
+    }
+
+    loadGenres();
+  }, [movies]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -37,7 +55,39 @@ const Hero = () => {
 
   const currentMovie = movies[currentIndex];
 
-  return (
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+          <p className="text-gray-400">Loading movies...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-lg mb-2">Failed to load movies</p>
+          <p className="text-gray-400 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (movies.length === 0) {
+    return (
+      <div className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950 flex items-center justify-center">
+        <p className="text-gray-400">No movies available</p>
+      </div>
+    );
+  }
+  return(
     <div
       className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950"
       onMouseEnter={() => setIsHovering(true)}
@@ -55,7 +105,7 @@ const Hero = () => {
           >
             {/* Background Image */}
             <img
-              src={movie.backdrop_path}
+              src={`${IMAGE_PATH}${movie.backdrop_path}`}
               alt={movie.title}
               className="w-full h-full object-cover"
             />
@@ -70,21 +120,21 @@ const Hero = () => {
           <div className="max-w-2xl">
             {/* Movie Title */}
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-              {currentMovie.title}
+              {currentMovie?.title}
             </h1>
 
             {/* Movie Meta Info */}
             <div className="flex flex-col gap-3 mb-6">
               <div className="flex items-center gap-4 text-sm md:text-base text-gray-200">
                 <span className="bg-red-600 px-3 py-1 rounded-full font-semibold">
-                  { currentMovie.vote_average.toFixed(1)} / 10
+                  {currentMovie?.vote_average.toFixed(1)} / 10
                 </span>
-                <span>{currentMovie.genre}</span>
+                <span>{genreMap[currentMovie?.id]?.join(" / ")}</span>
               </div>
 
               {/* Description */}
               <p className="text-sm md:text-base text-gray-300 max-w-md leading-relaxed hidden md:block">
-                {currentMovie.overview}
+                {currentMovie?.overview}
               </p>
             </div>
 
