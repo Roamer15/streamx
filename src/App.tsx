@@ -6,6 +6,7 @@ import SidebarProvider from "./context/SidebarContext";
 import { DetailMovieProvider } from "./context/DetailMovieProvider";
 import { useSidebar } from "./hooks/useSidebar";
 import Home from "./pages/Home";
+import DetailsPage from "./pages/DetailsPage";
 import Footer from "./components/Footer";
 
 function AppContent() {
@@ -22,7 +23,7 @@ function AppContent() {
       >
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/details/:id" element={<div className="p-6">Movie Details</div>}/>
+          <Route path="/details/:id" element={<DetailsPage />}/>
           <Route path="/movies" element={<div className="p-6">Movies Page Coming Soon</div>} />
           <Route path="/series" element={<div className="p-6">Series Page Coming Soon</div>} />
           <Route path="/favourites" element={<div className="p-6">Favourites Page Coming Soon</div>} />
