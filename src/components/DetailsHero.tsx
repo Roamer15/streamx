@@ -8,10 +8,11 @@ interface DetailsHero {
   releaseYear: string;
   handleAddToWatchlist: () => void;
   isInWatchlist: boolean;
+  onPlayClick?: () => void;
 }
 
 export default function DetailsHero({
-  selectedMovie, backdropImage, runtime, releaseYear, handleAddToWatchlist, isInWatchlist}: DetailsHero) {
+  selectedMovie, backdropImage, runtime, releaseYear, handleAddToWatchlist, isInWatchlist, onPlayClick}: DetailsHero) {
   return (
     <div className="relative h-100 md:h-175 overflow-hidden">
       {/* Backdrop Image */}
@@ -57,11 +58,13 @@ export default function DetailsHero({
 
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <button className="bg-red-600 hover:bg-red-700 text-white px-2 md:px-8 py-2 sm:text-sm md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+            <button 
+              onClick={onPlayClick}
+              className="bg-red-600 hover:bg-red-700 text-white px-2 md:px-8 py-2 sm:text-sm md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              Watch Now
+              Play Now
             </button>
 
             <button

@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from 'react-router';
 import { useTV } from '../hooks/useTV';
-import { BASE_URL, API_KEY } from '../services/api';
+import { BASE_URL, API_KEY, MEDIA_PATH } from '../services/api';
 import Cast from '../components/Cast';
 import Carousel from '../components/Carousel';
+import VideoPlayer from '../components/VideoPlayer';
 import { useState, useEffect } from 'react';
 import type { Movie } from '../types/media.types';
 import TvHero from '../components/TvHero';
@@ -22,6 +23,8 @@ const TVDetailsPage = () => {
   const { tvDetails, episodes, selectedSeason, setSelectedSeason, loading, error } = useTV(id!);
   const [cast, setCast] = useState<Cast[]>([]);
   const [castLoading, setCastLoading] = useState(true);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [selectedEpisode, setSelectedEpisode] = useState<number | null>(null);
 
   // Fetch Cast Data
   useEffect(() => {
@@ -80,9 +83,17 @@ const TVDetailsPage = () => {
 
   const backdropImage = tvDetails.backdrop_path || tvDetails.poster_path;
   const firstAirYear = tvDetails.first_air_date?.split('-')[0] || 'N/A';
-  
+
   return (
     <div className="bg-gray-950">
+      {/* Video Player Modal */}
+      <VideoPlayer
+        isOpen={isPlayerOpen}
+        onClose={() => setIsPlayerOpen(false)}
+        mediaUrl={`${MEDIA_PATH}/tv/${id}/${selectedSeason}-${selectedEpisode || 1}`}
+        title={tvDetails?.name || 'Series'}
+      />
+
       {/* Hero Section */}
       <TvHero tvDetails={tvDetails} backdropImage={backdropImage} firstAirYear={firstAirYear}/>
 
@@ -113,7 +124,14 @@ const TVDetailsPage = () => {
         {episodes.length > 0 ? (
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {episodes.map((episode) => (
-             <EpisodeCard episode={episode}/>
+             <EpisodeCard 
+               key={episode.id}
+               episode={episode}
+               onPlayClick={(ep) => {
+                 setSelectedEpisode(ep.episode_number);
+                 setIsPlayerOpen(true);
+               }}
+             />
             ))}
           </div>
         ) : (

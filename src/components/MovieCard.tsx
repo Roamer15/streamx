@@ -15,6 +15,7 @@ const MovieCard = memo(
     }, [movie, onMovieClick]);
 
     const title = movie.title ? movie.title : movie.name;
+    const finalImagePath = movie.poster_path? movie.poster_path : movie.backdrop_path
 
     return (
       <div
@@ -24,8 +25,8 @@ const MovieCard = memo(
         {/* Movie Poster Card */}
         <div className="relative h-52 md:h-65 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
           <img
-            src={`${IMAGE_PATH}${movie.poster_path}`}
-            alt={movie.title}
+            src={`${IMAGE_PATH}${finalImagePath}` || 'https://as1.ftcdn.net/jpg/01/98/91/58/1000_F_198915813_Ad1GiheMzaJU9tN8xPbonxTvr9UDeOJe.webp'}
+            alt={title}
             className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
           />
 

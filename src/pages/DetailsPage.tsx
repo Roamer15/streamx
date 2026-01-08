@@ -1,9 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { DetailMovieContext } from "../context/SideBarContextLine";
-import { BASE_URL, API_KEY } from "../services/api";
+import { BASE_URL, API_KEY, MEDIA_PATH } from "../services/api";
 import DetailsHero from "../components/DetailsHero";
 import Carousel from "../components/Carousel";
+import VideoPlayer from "../components/VideoPlayer";
 import type { Movie } from "../types/media.types";
 import Cast from "../components/Cast";
 
@@ -28,6 +29,7 @@ export default function DetailsPage() {
   const [castLoading, setCastLoading] = useState(true);
   const [runtime, setRuntime] = useState<number | null>(null);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
   // Fetch Movie Details when selectedMovie is not available
   useEffect(() => {
@@ -160,8 +162,24 @@ export default function DetailsPage() {
   //TSX
   return (
     <div className="bg-gray-950">
+      {/* Video Player Modal */}
+      <VideoPlayer
+        isOpen={isPlayerOpen}
+        onClose={() => setIsPlayerOpen(false)}
+        mediaUrl={`${MEDIA_PATH}/movie/${id}`}
+        title={selectedMovie.title}
+      />
+
       {/* Hero Section */}
-      <DetailsHero selectedMovie={selectedMovie} backdropImage={backdropImage} runtime={runtime} releaseYear={releaseYear} handleAddToWatchlist={handleAddToWatchlist} isInWatchlist={isInWatchlist}/>
+      <DetailsHero 
+        selectedMovie={selectedMovie} 
+        backdropImage={backdropImage} 
+        runtime={runtime} 
+        releaseYear={releaseYear} 
+        handleAddToWatchlist={handleAddToWatchlist} 
+        isInWatchlist={isInWatchlist}
+        onPlayClick={() => setIsPlayerOpen(true)}
+      />
 
       {/* Cast Section */}
       <div className="px-4 md:px-8 lg:px-16 py-12">

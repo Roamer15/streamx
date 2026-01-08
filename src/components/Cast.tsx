@@ -14,7 +14,7 @@ export default function Cast({actor}: CastProp) {
                         <div className="relative h-20 md:h-25 w-20 md:w-25  bg-gray-800 rounded-full overflow-hidden shadow-lg mb-3">
                           {actor.profile_path ? (
                             <img
-                              src={`${IMAGE_PATH}${actor.profile_path}`}
+                              src={`${IMAGE_PATH}${actor.profile_path}` || 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-grey-male-icon.png'}
                               alt={actor.name}
                               className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
                             />

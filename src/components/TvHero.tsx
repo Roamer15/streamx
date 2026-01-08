@@ -9,7 +9,7 @@ interface tvHeroProps {
 
 export default function TvHero({tvDetails, backdropImage, firstAirYear}: tvHeroProps) {
     return (
-        <div className="relative h-96 md:h-115 w-full overflow-hidden">
+        <div className="relative h-96 md:h-125 w-full overflow-hidden">
                 {backdropImage && (
                   <>
                     <img
