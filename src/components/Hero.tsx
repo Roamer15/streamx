@@ -12,9 +12,10 @@ const Hero = () => {
     error,
   } = useFetchMovies(latestMoviesUrl);
 
-const movies:Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
+  const movies: Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [genreMap, setGenreMap] = useState<Record<number, string[]>>({});
 
   // Auto-rotate carousel every 7 seconds (pauses on hover)
   useEffect(() => {
@@ -26,8 +27,6 @@ const movies:Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
 
     return () => clearInterval(interval);
   }, [movies.length, isHovering]);
-
-  const [genreMap, setGenreMap] = useState<Record<number, string[]>>({});
 
   useEffect(() => {
     if (movies.length === 0) return;
@@ -47,7 +46,9 @@ const movies:Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
     }
 
     loadGenres();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [movies]);
 
   const goToSlide = (index: number) => {
