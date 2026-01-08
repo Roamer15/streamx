@@ -13,7 +13,7 @@ interface DetailsHero {
 export default function DetailsHero({
   selectedMovie, backdropImage, runtime, releaseYear, handleAddToWatchlist, isInWatchlist}: DetailsHero) {
   return (
-    <div className="relative h-96 md:h-175 overflow-hidden">
+    <div className="relative h-100 md:h-175 overflow-hidden">
       {/* Backdrop Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -22,7 +22,7 @@ export default function DetailsHero({
         }}
       >
         {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-black via-black/10 to-transparent" />
         <div className="absolute inset-0 bg-linear-to-t from-gray-950 via-transparent to-transparent" />
       </div>
 
