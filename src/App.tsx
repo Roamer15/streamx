@@ -10,6 +10,7 @@ import DetailsPage from "./pages/DetailsPage";
 import TVDetailsPage from "./pages/TVDetailsPage";
 import Search from "./pages/Search";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
@@ -23,6 +24,7 @@ function AppContent() {
           isSidebarOpen ? "md:ml-64" : "md:ml-0"
         }`}
       >
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/details/movie/:id" element={<DetailsPage />}/>

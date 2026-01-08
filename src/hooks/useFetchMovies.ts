@@ -83,9 +83,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { fetchMovies } from '../services/api';
+import type { Movie } from '../types/media.types';
 
 const useFetchMovies = (url: string) => {
-    const [movies, setMovies] = useState([]);
+    const [movies, setMovies] = useState<Movie[] | null>([]);
     const [loading, setLoading] = useState(true); // Default to true to avoid sync setState
     const [error, setError] = useState<string | null>(null);
 

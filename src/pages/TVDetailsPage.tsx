@@ -4,6 +4,7 @@ import { BASE_URL, API_KEY } from '../services/api';
 import Cast from '../components/Cast';
 import Carousel from '../components/Carousel';
 import { useState, useEffect } from 'react';
+import type { Movie } from '../types/media.types';
 import TvHero from '../components/TvHero';
 import EpisodeCard from '../components/EpisodeCard';
 import TvOverview from '../components/TvOverview';
@@ -42,6 +43,11 @@ const TVDetailsPage = () => {
     fetchCast();
   }, [id]);
 
+  const handleNavigationToSeries = (series: Movie & { media_type?: string }) => {
+    // const mediaType = series.media_type === 'tv' ? 'tv' : 'movie';
+    navigate(`/details/tv/${series.id}`);
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -74,7 +80,7 @@ const TVDetailsPage = () => {
 
   const backdropImage = tvDetails.backdrop_path || tvDetails.poster_path;
   const firstAirYear = tvDetails.first_air_date?.split('-')[0] || 'N/A';
-
+  
   return (
     <div className="bg-gray-950">
       {/* Hero Section */}
@@ -105,7 +111,7 @@ const TVDetailsPage = () => {
 
         {/* Episodes Grid */}
         {episodes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {episodes.map((episode) => (
              <EpisodeCard episode={episode}/>
             ))}
@@ -139,7 +145,7 @@ const TVDetailsPage = () => {
         <Carousel
           title="Similar Series"
           url={`${BASE_URL}/tv/${id}/similar?api_key=${API_KEY}`}
-          onMovieClick={() => {}}
+          onMovieClick={handleNavigationToSeries}
         />
       </div>
 
@@ -148,7 +154,7 @@ const TVDetailsPage = () => {
         <Carousel
           title="You Might Also Like"
           url={`${BASE_URL}/tv/${id}/recommendations?api_key=${API_KEY}`}
-          onMovieClick={() => {}}
+          onMovieClick={handleNavigationToSeries}
         />
       </div>
     </div>

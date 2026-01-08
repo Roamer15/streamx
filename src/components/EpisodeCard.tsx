@@ -9,43 +9,27 @@ export default function EpisodeCard({ episode }: EpisodeProp) {
   return (
     <div
       key={episode.id}
-      className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+      className="flex relative bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
     >
       {episode.still_path && (
         <img
           src={`${IMAGE_PATH}${episode.still_path}`}
           alt={episode.name}
-          className="w-full h-40 object-cover"
+          className="w-full h-full object-cover opacity-60"
         />
       )}
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-white font-semibold text-lg">
+
+            <div className="absolute inset-0 bg-linear-to-r from-black via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black via-black/10 to-transparent" />
+      <div className="p-4 absolute z-20">
+        <div className="flex items-center justify-between mb-0 md:mb-2">
+          <h3 className="text-white font-semibold text-sm sm:text-lg">
             Episode {episode.episode_number}
           </h3>
-          <span className="text-yellow-500">
-            ★ {episode.vote_average.toFixed(1)}
-          </span>
         </div>
-        <p className="text-gray-300 font-semibold mb-2">{episode.name}</p>
-        <p className="text-gray-400 text-sm mb-3 line-clamp-2">
-          {episode.overview}
+        <p className="text-gray-300 font-medium md:font-semibold mb-2">
+          {episode.name}
         </p>
-        <p className="text-gray-500 text-xs">{episode.air_date}</p>
-
-        {episode.guest_stars && episode.guest_stars.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-700">
-            <p className="text-gray-400 text-xs mb-1">Guest Stars:</p>
-            <p className="text-gray-300 text-xs">
-              {episode.guest_stars
-                .slice(0, 2)
-                .map((star) => star.name)
-                .join(", ")}
-              {episode.guest_stars.length > 2 &&
-                ` +${episode.guest_stars.length - 2}`}
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

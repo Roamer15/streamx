@@ -6,15 +6,14 @@ import MovieCard from "./MovieCard";
 interface CarouselProps {
     title: string;
     url: string;
-    onMovieClick?: (movie: Movie) => void;
+    onMovieClick?: (movie: Movie & { media_type?: string }) => void;
 }
 
 const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
   const latestMoviesUrl = url;
   const { movies: LatestMovies, loading, error } = useFetchMovies(latestMoviesUrl);
 
-  const movies: Movie[] = LatestMovies.slice(0, 12)
-  console.log(movies)
+  const movies: (Movie & { media_type?: string })[] = LatestMovies.slice(0, 12)
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +30,7 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
     container.scrollLeft = newPosition;
   }, []);
 
-  const handleMovieClick = useCallback((movie: Movie) => {
+  const handleMovieClick = useCallback((movie: Movie & { media_type?: string }) => {
     onMovieClick?.(movie);
   }, [onMovieClick]);
 

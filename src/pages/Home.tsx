@@ -32,6 +32,11 @@ export default function Home() {
     navigate(`/details/${mediaType}/${movie.id}`);
   };
 
+  const handleNavigationToSeries = (series: Movie & { media_type?: string }) => {
+      // const mediaType = series.media_type === 'tv' ? 'tv' : 'movie';
+      navigate(`/details/tv/${series.id}`);
+    }
+
   return (
     <>
       <Hero />
@@ -49,7 +54,7 @@ export default function Home() {
       <Carousel
         title="Latest Series"
         url={latestSeriesUrl}
-        onMovieClick={handleNavigationToDetailPage}
+        onMovieClick={handleNavigationToSeries}
       />
       <Carousel
         title="Top Rated Movies"
@@ -59,17 +64,17 @@ export default function Home() {
       <Carousel
         title="Top Rated Series"
         url={TopSeriesUrl}
-        onMovieClick={handleNavigationToDetailPage}
+        onMovieClick={handleNavigationToSeries}
       />
       <Carousel
         title="Anime"
         url={animeUrl}
-        onMovieClick={handleNavigationToDetailPage}
+        onMovieClick={handleNavigationToSeries}
       />
       <Carousel
         title="K Drama"
         url={kDramaUrl}
-        onMovieClick={handleNavigationToDetailPage}
+        onMovieClick={handleNavigationToSeries}
       />
       <Carousel
         title="Bollywood"
