@@ -86,7 +86,7 @@ import { fetchMovies } from '../services/api';
 import type { Movie } from '../types/media.types';
 
 const useFetchMovies = (url: string) => {
-    const [movies, setMovies] = useState<Movie[] | null>([]);
+    const [movies, setMovies] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true); // Default to true to avoid sync setState
     const [error, setError] = useState<string | null>(null);
 
