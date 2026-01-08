@@ -1,53 +1,129 @@
-# React + TypeScript + Vite
+# StreamX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich streaming platform for discovering movies and TV shows. Built with React, TypeScript, and Vite, StreamX leverages the TMDB API to provide users with an extensive catalog of films and television content.
 
-Currently, two official plugins are available:
+## About the Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+StreamX is a fully functional streaming discovery application that allows users to:
+- Browse trending, latest, and top-rated movies and TV shows
+- Explore content by genre (Anime, K-Drama, Bollywood, Martial Arts, Animation)
+- Search for specific movies and TV shows
+- View detailed information about movies and TV shows
+- Watch trailers and videos directly in the app
+- Enjoy a responsive, user-friendly interface
 
-## React Compiler
+The project is built as part of the RebaseCodeCamp 2026 bootcamp, showcasing modern React development practices with TypeScript.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What We've Built
 
-## Expanding the ESLint configuration
+### Core Features
+- **Home Page**: Displays multiple carousels with trending content, latest releases, and genre-specific collections
+- **Search Functionality**: Real-time search for movies and TV shows across the TMDB database
+- **Detailed Views**: Individual pages for movie and TV show details with complete information (cast, ratings, synopsis, etc.)
+- **TV Show Support**: Full support for TV series with episode tracking and season information
+- **Video Player**: Integrated video player for watching trailers
+- **Navigation**: Smooth routing with React Router for seamless navigation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Technical Architecture
+- **Frontend Framework**: React 19 with TypeScript for type-safe development
+- **Build Tool**: Vite for fast development and optimized production builds
+- **Styling**: Tailwind CSS with responsive design support
+- **State Management**: React Context API for managing app state (sidebar, selected media, etc.)
+- **API Integration**: TMDB API for real-time movie and TV show data
+- **Code Quality**: ESLint configuration for maintaining code standards
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Project Structure
+```
+src/
+├── components/        # Reusable UI components (Navbar, Sidebar, Carousel, etc.)
+├── pages/            # Full page components (Home, Search, Details pages)
+├── context/          # React Context for state management
+├── hooks/            # Custom React hooks for data fetching and sidebar logic
+├── services/         # API integration and utility functions
+├── types/            # TypeScript type definitions
+├── assets/           # Static assets
+└── App.tsx           # Main application component
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Key Components
+- **Navbar**: Navigation bar with search capability
+- **Sidebar**: Collapsible navigation menu
+- **Carousel**: Horizontal scrolling content display
+- **MovieCard/TVCard**: Individual content cards with hover effects
+- **Hero Section**: Featured content display
+- **VideoPlayer**: Embedded video playback for trailers
+- **Footer**: Application footer with links and information
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
+## Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd streamx
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Set up environment variables
+Create a `.env.local` file in the root directory:
+```
+VITE_BASE_API_KEY=your_tmdb_api_key
+VITE_BASE_BASE_URL=https://api.themoviedb.org/3
+VITE_BASE_MEDIA_URL=https://www.youtube.com/embed
+```
+
+4. Start the development server
+```bash
+npm run dev
+```
+
+The application will open at `http://localhost:5173`
+
+## Available Scripts
+
+- `npm run dev`: Start the development server with hot module replacement
+- `npm run build`: Build the application for production
+- `npm run lint`: Run ESLint to check code quality
+- `npm run preview`: Preview the production build locally
+
+## Technology Stack
+
+- **React**: 19.2.0 - UI library
+- **TypeScript**: 5.9.3 - Type-safe JavaScript
+- **Vite**: 7.2.4 - Build tool and dev server
+- **Tailwind CSS**: 4.1.18 - Utility-first CSS framework
+- **React Router**: 7.11.0 - Client-side routing
+- **TMDB API**: Data source for movie and TV show information
+
+## Development Notes
+
+- The application uses React Context API for state management, making it lightweight and without external state management libraries
+- Custom hooks (`useFetchMovies`, `useSearch`, `useSidebar`, `useTV`) encapsulate data fetching and sidebar logic
+- The codebase is fully typed with TypeScript for better developer experience and fewer runtime errors
+- Tailwind CSS is used for styling, with responsive classes for mobile, tablet, and desktop layouts
+
+## Future Enhancements
+
+Potential features for future versions:
+- User authentication and bookmarking
+- Watchlist functionality
+- User ratings and reviews
+- Streaming provider information
+- Advanced filters and sorting options
+- Offline support with caching
+
+## License
+
+This project is part of the RebaseCodeCamp 2026 bootcamp curriculum.
 import reactDom from 'eslint-plugin-react-dom'
 
 export default defineConfig([
