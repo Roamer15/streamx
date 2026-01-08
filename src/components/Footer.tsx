@@ -51,7 +51,7 @@ const Footer = () => {
               href="mailto:support@streamx.com"
               className="text-red-500 hover:text-red-400 transition-colors text-sm"
             >
-              support@streamx.com
+              support@chwiix.com
             </a>
           </div>
         </div>
@@ -72,7 +72,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="text-center text-xs text-gray-500">
           <p>
-            &copy; {new Date().getFullYear()} StreamX. All rights reserved.
+            &copy; {new Date().getFullYear()} Chwiix. All rights reserved.
           </p>
         </div>
       </div>

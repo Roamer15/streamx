@@ -69,7 +69,7 @@ const Navbar = () => {
           {/* Center: Logo */}
           <Link to="/" className="shrink-0">
             <div className="text-lg md:text-2xl font-bold bg-linear-to-r from-red-500 to-pink-500 bg-clip-text text-transparent whitespace-nowrap">
-              StreamX
+              ChwiiX
             </div>
           </Link>
 
