@@ -25,9 +25,11 @@ export default function Home() {
   const { setSelectedMovie } = context;
   const navigate = useNavigate();
 
-  const handleNavigationToDetailPage = (movie: Movie) => {
+  const handleNavigationToDetailPage = (movie: Movie & { media_type?: string }, isTV?: boolean) => {
     setSelectedMovie(movie);
-    navigate(`/details/${movie.id}`);
+    // Detect if it's TV based on media_type property or if explicitly passed
+    const mediaType = movie.media_type === 'tv' || isTV ? 'tv' : 'movie';
+    navigate(`/details/${mediaType}/${movie.id}`);
   };
 
   return (

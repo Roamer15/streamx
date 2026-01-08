@@ -14,6 +14,7 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
   const { movies: LatestMovies, loading, error } = useFetchMovies(latestMoviesUrl);
 
   const movies: Movie[] = LatestMovies.slice(0, 12)
+  console.log(movies)
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

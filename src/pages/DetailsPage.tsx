@@ -103,7 +103,7 @@ export default function DetailsPage() {
   // Check if movie is in watchlist
   useEffect(() => {
     if (!selectedMovie) return;
-    const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]") || [];
     setIsInWatchlist(
       watchlist.some((item: Movie) => item.id === selectedMovie.id)
     );
@@ -112,7 +112,7 @@ export default function DetailsPage() {
   const handleAddToWatchlist = () => {
     if (!selectedMovie) return;
 
-    const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]") || [];
     const isMovieInWatchlist = watchlist.some((item: Movie) => item.id === selectedMovie.id);
 
     if (!isMovieInWatchlist) {
@@ -127,7 +127,7 @@ export default function DetailsPage() {
 
   const handleMovieClick = (movie: Movie) => {
     setSelectedMovie(movie);
-    navigate(`/details/${movie.id}`);
+    navigate(`/details/movie/${movie.id}`);
   };
 
   // Error state if movie not found
@@ -172,7 +172,7 @@ export default function DetailsPage() {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
           </div>
         ) : cast.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {cast.map((actor) => (
               <Cast actor={actor}/>
             ))}

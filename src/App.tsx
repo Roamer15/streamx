@@ -7,6 +7,8 @@ import { DetailMovieProvider } from "./context/DetailMovieProvider";
 import { useSidebar } from "./hooks/useSidebar";
 import Home from "./pages/Home";
 import DetailsPage from "./pages/DetailsPage";
+import TVDetailsPage from "./pages/TVDetailsPage";
+import Search from "./pages/Search";
 import Footer from "./components/Footer";
 
 function AppContent() {
@@ -23,11 +25,12 @@ function AppContent() {
       >
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/details/:id" element={<DetailsPage />}/>
+          <Route path="/details/movie/:id" element={<DetailsPage />}/>
+          <Route path="/details/tv/:id" element={<TVDetailsPage />}/>
+          <Route path="/search" element={<Search />} />
           <Route path="/movies" element={<div className="p-6">Movies Page Coming Soon</div>} />
           <Route path="/series" element={<div className="p-6">Series Page Coming Soon</div>} />
           <Route path="/favourites" element={<div className="p-6">Favourites Page Coming Soon</div>} />
-          <Route path="/search" element={<div className="p-6">Search Results Page Coming Soon</div>} />
         </Routes>
       </main>
       <Footer></Footer>

@@ -11,7 +11,7 @@ export default function Cast({actor}: CastProp) {
                         key={actor.id}
                         className="group cursor-pointer transition-transform duration-300 hover:scale-105"
                       >
-                        <div className="relative h-64 md:h-72 bg-gray-800 rounded-lg overflow-hidden shadow-lg mb-3">
+                        <div className="relative h-20 md:h-25 w-20 md:w-25  bg-gray-800 rounded-full overflow-hidden shadow-lg mb-3">
                           {actor.profile_path ? (
                             <img
                               src={`${IMAGE_PATH}${actor.profile_path}`}
