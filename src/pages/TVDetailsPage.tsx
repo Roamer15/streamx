@@ -1,9 +1,12 @@
 import { useParams, useNavigate } from 'react-router';
 import { useTV } from '../hooks/useTV';
-import { IMAGE_PATH, BASE_URL, API_KEY } from '../services/api';
+import { BASE_URL, API_KEY } from '../services/api';
 import Cast from '../components/Cast';
 import Carousel from '../components/Carousel';
 import { useState, useEffect } from 'react';
+import TvHero from '../components/TvHero';
+import EpisodeCard from '../components/EpisodeCard';
+import TvOverview from '../components/TvOverview';
 
 export interface Cast {
   id: number;
@@ -75,78 +78,10 @@ const TVDetailsPage = () => {
   return (
     <div className="bg-gray-950">
       {/* Hero Section */}
-      <div className="relative h-96 md:h-125 w-full overflow-hidden">
-        {backdropImage && (
-          <>
-            <img
-              src={`${IMAGE_PATH}${backdropImage}`}
-              alt={tvDetails.name}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-r from-gray-950 via-gray-950/50 to-transparent" />
-          </>
-        )}
-
-        {/* Content Overlay */}
-        <div className="absolute inset-0 flex items-end px-4 md:px-8 lg:px-16 py-8">
-          <div className="flex gap-8 w-full">
-            {tvDetails.poster_path && (
-              <img
-                src={`${IMAGE_PATH}${tvDetails.poster_path}`}
-                alt={tvDetails.name}
-                className="w-32 md:w-48 h-48 md:h-72 object-cover rounded-lg shadow-lg"
-              />
-            )}
-
-            <div className="flex-1 flex flex-col justify-end mb-4">
-              <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">{tvDetails.name}</h1>
-              <p className="text-gray-400 mb-4">
-                {tvDetails.genres.map((g) => g.name).join(', ')}
-              </p>
-              <div className="flex items-center gap-4 text-sm md:text-base">
-                <span className="text-yellow-500 font-semibold">★ {tvDetails.vote_average.toFixed(1)}</span>
-                <span className="text-gray-400">{firstAirYear}</span>
-                <span className="text-gray-400">{tvDetails.number_of_seasons} Season{tvDetails.number_of_seasons !== 1 ? 's' : ''}</span>
-                <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded">{tvDetails.status}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TvHero tvDetails={tvDetails} backdropImage={backdropImage} firstAirYear={firstAirYear}/>
 
       {/* Overview Section */}
-      <div className="px-4 md:px-8 lg:px-16 py-12">
-        <h2 className="text-2xl font-bold text-white mb-4">Overview</h2>
-        <p className="text-gray-300 leading-relaxed max-w-3xl">{tvDetails.overview}</p>
-
-        {tvDetails.created_by && tvDetails.created_by.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-white mb-2">Created By</h3>
-            <p className="text-gray-400">{tvDetails.created_by.map((creator) => creator.name).join(', ')}</p>
-          </div>
-        )}
-
-        {tvDetails.networks && tvDetails.networks.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-white mb-2">Networks</h3>
-            <div className="flex gap-4 flex-wrap">
-              {tvDetails.networks.map((network) => (
-                <div key={network.id} className="bg-gray-800 px-4 py-2 rounded">
-                  {network.logo_path ? (
-                    <img
-                      src={`${IMAGE_PATH}${network.logo_path}`}
-                      alt={network.name}
-                      className="h-8 object-contain"
-                    />
-                  ) : (
-                    <p className="text-gray-300">{network.name}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      <TvOverview tvDetails={tvDetails}/>
 
       {/* Seasons & Episodes Section */}
       <div className="px-4 md:px-8 lg:px-16 py-12">
@@ -172,37 +107,7 @@ const TVDetailsPage = () => {
         {episodes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {episodes.map((episode) => (
-              <div
-                key={episode.id}
-                className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                {episode.still_path && (
-                  <img
-                    src={`${IMAGE_PATH}${episode.still_path}`}
-                    alt={episode.name}
-                    className="w-full h-40 object-cover"
-                  />
-                )}
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-white font-semibold text-lg">Episode {episode.episode_number}</h3>
-                    <span className="text-yellow-500">★ {episode.vote_average.toFixed(1)}</span>
-                  </div>
-                  <p className="text-gray-300 font-semibold mb-2">{episode.name}</p>
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">{episode.overview}</p>
-                  <p className="text-gray-500 text-xs">{episode.air_date}</p>
-
-                  {episode.guest_stars && episode.guest_stars.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-gray-700">
-                      <p className="text-gray-400 text-xs mb-1">Guest Stars:</p>
-                      <p className="text-gray-300 text-xs">
-                        {episode.guest_stars.slice(0, 2).map((star) => star.name).join(', ')}
-                        {episode.guest_stars.length > 2 && ` +${episode.guest_stars.length - 2}`}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
+             <EpisodeCard episode={episode}/>
             ))}
           </div>
         ) : (
