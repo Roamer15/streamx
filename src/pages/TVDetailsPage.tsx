@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router';
-import { useTV } from '../hooks/useTV';
+import { useTV, type TVDetails } from '../hooks/useTV';
 import { BASE_URL, API_KEY, MEDIA_PATH } from '../services/api';
 import Cast from '../components/Cast';
 import Carousel from '../components/Carousel';
@@ -52,7 +52,7 @@ const TVDetailsPage = () => {
     if (!tvDetails) return;
     const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
     setIsInFavourites(
-      favourites.some((item: any) => item.id === tvDetails.id)
+      favourites.some((item: TVDetails) => item.id === tvDetails.id)
     );
   }, [tvDetails]);
 
@@ -65,7 +65,7 @@ const TVDetailsPage = () => {
     if (!tvDetails) return;
 
     const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
-    const isSeriesInFavourites = favourites.some((item: any) => item.id === tvDetails.id);
+    const isSeriesInFavourites = favourites.some((item: TVDetails) => item.id === tvDetails.id);
 
     if (!isSeriesInFavourites) {
       favourites.push(tvDetails);
@@ -73,7 +73,7 @@ const TVDetailsPage = () => {
       setIsInFavourites(true);
       alert(`✓ Added to favourites: ${tvDetails.name}`);
     } else {
-      const updated = favourites.filter((item: any) => item.id !== tvDetails.id);
+      const updated = favourites.filter((item: TVDetails) => item.id !== tvDetails.id);
       localStorage.setItem("favourites", JSON.stringify(updated));
       setIsInFavourites(false);
       alert(`✓ Removed from favourites: ${tvDetails.name}`);
