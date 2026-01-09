@@ -34,7 +34,7 @@ const Sidebar = () => {
       {/* Sidebar Overlay (for mobile) */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-90 z-30 md:hidden"
+          className="fixed inset-0 bg-transparent bg-opacity-95 backdrop-blur-md z-30 md:hidden"
           onClick={closeSidebar}
         />
         
@@ -42,7 +42,7 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-gray-900 border-r border-gray-800 text-white transform transition-all duration-300 z-40 pt-16 md:pt-20 ${
+        className={`fixed left-0 top-0 h-screen w-54 sm:w-60 bg-gray-900 border-r border-gray-800 text-white transform transition-all duration-300 z-40 pt-16 md:pt-20 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -78,7 +78,7 @@ const Navbar = () => {
             <div className="relative w-full md:w-100" ref={dropdownRef}>
               <input
                 type="text"
-                placeholder="Search Movies, Series, TV shows..."
+                placeholder="Search Movies, Series, TV..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 py-2 md:py-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-400 text-sm"

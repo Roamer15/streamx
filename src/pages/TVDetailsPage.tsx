@@ -9,6 +9,7 @@ import type { Movie } from '../types/media.types';
 import TvHero from '../components/TvHero';
 import EpisodeCard from '../components/EpisodeCard';
 import TvOverview from '../components/TvOverview';
+import TvDetailsSkeletonLoader from '../components/TvDetailsSkeletonLoader';
 
 export interface Cast {
   id: number;
@@ -82,12 +83,8 @@ const TVDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading series details...</p>
-        </div>
-      </div>
+      
+    <TvDetailsSkeletonLoader />
     );
   }
 
