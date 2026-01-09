@@ -2,6 +2,7 @@ import { useRef, useCallback, memo, useState } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { type Movie } from "../types/media.types";
 import MovieCard from "./MovieCard";
+import { MovieSkeleton } from "./MovieCardSkeleton";
 
 interface CarouselProps {
     title: string;
@@ -36,15 +37,20 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
   }, [onMovieClick]);
 
   if (loading) {
-    return (
-      <div className="px-4 md:px-8 lg:px-16 py-8">
-        <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
-        <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
-        </div>
+  return (
+    <div className="px-4 md:px-8 lg:px-16 py-8">
+      {/* Skeleton Title */}
+      <div className="h-8 bg-gray-800 rounded w-48 mb-6 animate-pulse"></div>
+      
+      {/* Skeleton Row */}
+      <div className="flex gap-4 overflow-hidden">
+        {[...Array(8)].map((_, i) => (
+          <MovieSkeleton key={i} />
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error) {
     return (

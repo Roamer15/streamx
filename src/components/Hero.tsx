@@ -68,10 +68,33 @@ const Hero = () => {
   // Show loading state
   if (loading) {
     return (
-      <div className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
-          <p className="text-gray-400">Loading movies...</p>
+      <div className="relative w-full h-96 md:h-175 overflow-hidden bg-gray-950 px-4 md:px-8 lg:px-16 flex flex-col justify-end pb-12">
+        {/* Background Shimmer Effect */}
+        <div className="absolute inset-0 bg-gray-900 animate-pulse" />
+
+        {/* Skeleton Content Overlay */}
+        <div className="relative z-10 max-w-2xl space-y-4">
+          {/* Title Skeleton */}
+          <div className="h-10 md:h-16 bg-gray-800 rounded-md w-3/4 animate-pulse" />
+
+          {/* Meta Info Skeletons */}
+          <div className="flex gap-4">
+            <div className="h-6 bg-gray-800 rounded-full w-20 animate-pulse" />
+            <div className="h-6 bg-gray-800 rounded-full w-40 animate-pulse" />
+          </div>
+
+          {/* Button Skeleton */}
+          <div className="h-12 bg-gray-800 rounded-lg w-32 animate-pulse mt-4" />
+        </div>
+
+        {/* Dots Indicator Skeleton */}
+        <div className="absolute bottom-4 right-8 md:right-4 flex gap-2">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="w-2 h-2 bg-gray-800 rounded-full animate-pulse"
+            />
+          ))}
         </div>
       </div>
     );
@@ -140,23 +163,14 @@ const Hero = () => {
                 <span className="bg-red-600 px-3 py-1 rounded-full font-semibold">
                   {currentMovie?.vote_average.toFixed(1)} / 10
                 </span>
-                <span>{genreMap[currentMovie?.id]?.join(" | ")}</span>
+                <span>
+                  {genreMap[currentMovie?.id] ? (
+                    genreMap[currentMovie?.id].join(" | ")
+                  ) : (
+                    <div className="h-4 w-32 bg-gray-800 animate-pulse rounded inline-block" />
+                  )}
+                </span>
               </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 mb-8">
-              {/* <button className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                Play Now
-              </button>
-              */}
             </div>
           </div>
         </div>
