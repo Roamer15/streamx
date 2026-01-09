@@ -72,7 +72,6 @@ export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
             (item.media_type === "movie" || item.media_type === "tv") &&
             item.poster_path
         );
-        console.log(filteredResults)
 
         setResults(filteredResults);
         setCurrentPage(data.page || 1);

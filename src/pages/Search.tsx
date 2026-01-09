@@ -10,7 +10,6 @@ const Search = () => {
   const navigate = useNavigate();
   const query = searchParams.get('q') || '';
   const { results, loading, error, searchQuery, setSearchQuery, currentPage, totalPages, goToPage } = useSearch();
-  console.log(results)
 
   // Trigger search when query param changes
   useEffect(() => {
