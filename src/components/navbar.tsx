@@ -74,14 +74,14 @@ const Navbar = () => {
           </Link>
 
           {/* Right: Search Bar */}
-          <form onSubmit={handleSearch} className="flex-1 md:flex-none">
-            <div className="relative w-full md:w-72" ref={dropdownRef}>
+          <form onSubmit={handleSearch} className="flex-2 md:flex-none">
+            <div className="relative w-full md:w-100" ref={dropdownRef}>
               <input
                 type="text"
-                placeholder="Search movies..."
+                placeholder="Search Movies, Series, TV shows..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-400 text-sm"
+                className="w-full px-4 py-2 md:py-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-400 text-sm"
               />
               <button
                 type="submit"

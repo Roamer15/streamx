@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_KEY, BASE_URL } from '../services/api';
 
 export interface TVSeason {
@@ -52,6 +52,9 @@ interface UseTVReturn {
   loading: boolean;
   error: string | null;
   setSelectedSeason: (season: number) => void;
+  currentPage: number;
+  totalPages: number;
+  goToPage: (page: number) => void
 }
 
 export const useTV = (tvId: number | string): UseTVReturn => {
@@ -60,6 +63,8 @@ export const useTV = (tvId: number | string): UseTVReturn => {
   const [selectedSeason, setSelectedSeason] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   // Fetch TV series details
   useEffect(() => {
@@ -77,6 +82,9 @@ export const useTV = (tvId: number | string): UseTVReturn => {
 
         const data = await response.json();
         setTVDetails(data);
+
+        setCurrentPage(data.page || 1);
+        setTotalPages(data.total_pages || 0);
         // Set default season to first season (usually season 0 or 1)
         setSelectedSeason(data.seasons[0]?.season_number || 0);
       } catch (err) {
@@ -119,6 +127,15 @@ export const useTV = (tvId: number | string): UseTVReturn => {
     fetchEpisodes();
   }, [tvId, selectedSeason, tvDetails]);
 
+  const goToPage = useCallback(
+      (page: number) => {
+        if (page > 0 && page <= totalPages) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      },
+      [totalPages]
+    );
+
   return {
     tvDetails,
     episodes,
@@ -126,6 +143,9 @@ export const useTV = (tvId: number | string): UseTVReturn => {
     loading,
     error,
     setSelectedSeason,
+    currentPage,
+    goToPage,
+    totalPages
   };
 };
 

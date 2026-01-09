@@ -10,7 +10,7 @@ export const fetchMovies = async(URL: string) => {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data =  await response.json()
-        return data.results
+        return data
     }
     catch(error) {
         console.error('Error fetching movies', error)

@@ -11,6 +11,8 @@ import TVDetailsPage from "./pages/TVDetailsPage";
 import Search from "./pages/Search";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import Movies from "./pages/Movies";
+import Series from "./pages/Series";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
@@ -30,8 +32,8 @@ function AppContent() {
           <Route path="/details/movie/:id" element={<DetailsPage />}/>
           <Route path="/details/tv/:id" element={<TVDetailsPage />}/>
           <Route path="/search" element={<Search />} />
-          <Route path="/movies" element={<div className="p-6">Movies Page Coming Soon</div>} />
-          <Route path="/series" element={<div className="p-6">Series Page Coming Soon</div>} />
+          <Route path="/movies" element={<Movies/>} />
+          <Route path="/series" element={<Series/>} />
           <Route path="/favourites" element={<div className="p-6">Favourites Page Coming Soon</div>} />
         </Routes>
       </main>
