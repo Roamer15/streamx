@@ -34,9 +34,10 @@ const Sidebar = () => {
       {/* Sidebar Overlay (for mobile) */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-90 z-30 md:hidden"
           onClick={closeSidebar}
         />
+        
       )}
 
       {/* Sidebar */}
@@ -45,6 +46,7 @@ const Sidebar = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+                  
         <nav className="mt-6 space-y-2 px-3 overflow-y-auto h-full">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;

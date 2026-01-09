@@ -28,7 +28,7 @@ export default function DetailsPage() {
   const [cast, setCast] = useState<Cast[]>([]);
   const [castLoading, setCastLoading] = useState(true);
   const [runtime, setRuntime] = useState<number | null>(null);
-  const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [isInFavourites, setIsInFavourites] = useState(false);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
   // Fetch Movie Details when selectedMovie is not available
@@ -102,28 +102,31 @@ export default function DetailsPage() {
     fetchRuntime();
   }, [id]);
 
-  // Check if movie is in watchlist
+  // Check if movie is in favourites
   useEffect(() => {
     if (!selectedMovie) return;
-    const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]") || [];
-    setIsInWatchlist(
-      watchlist.some((item: Movie) => item.id === selectedMovie.id)
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    setIsInFavourites(
+      favourites.some((item: Movie) => item.id === selectedMovie.id)
     );
   }, [selectedMovie]);
 
-  const handleAddToWatchlist = () => {
+  const handleToggleFavourites = () => {
     if (!selectedMovie) return;
 
-    const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]") || [];
-    const isMovieInWatchlist = watchlist.some((item: Movie) => item.id === selectedMovie.id);
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    const isMovieInFavourites = favourites.some((item: Movie) => item.id === selectedMovie.id);
 
-    if (!isMovieInWatchlist) {
-      watchlist.push(selectedMovie);
-      localStorage.setItem("watchlist", JSON.stringify(watchlist));
-      setIsInWatchlist(true);
-      alert(`✓ Added to watchlist: ${selectedMovie.title}`);
+    if (!isMovieInFavourites) {
+      favourites.push(selectedMovie);
+      localStorage.setItem("favourites", JSON.stringify(favourites));
+      setIsInFavourites(true);
+      alert(`✓ Added to favourites: ${selectedMovie.title}`);
     } else {
-      alert(`Movie is already in the watchlist: ${selectedMovie.title}`);
+      const updated = favourites.filter((item: Movie) => item.id !== selectedMovie.id);
+      localStorage.setItem("favourites", JSON.stringify(updated));
+      setIsInFavourites(false);
+      alert(`✓ Removed from favourites: ${selectedMovie.title}`);
     }
   };
 
@@ -176,8 +179,8 @@ export default function DetailsPage() {
         backdropImage={backdropImage} 
         runtime={runtime} 
         releaseYear={releaseYear} 
-        handleAddToWatchlist={handleAddToWatchlist} 
-        isInWatchlist={isInWatchlist}
+        handleToggleFavourites={handleToggleFavourites} 
+        isInFavourites={isInFavourites}
         onPlayClick={() => setIsPlayerOpen(true)}
       />
 

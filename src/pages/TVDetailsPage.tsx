@@ -25,6 +25,7 @@ const TVDetailsPage = () => {
   const [castLoading, setCastLoading] = useState(true);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState<number | null>(null);
+  const [isInFavourites, setIsInFavourites] = useState(false);
 
   // Fetch Cast Data
   useEffect(() => {
@@ -46,10 +47,38 @@ const TVDetailsPage = () => {
     fetchCast();
   }, [id]);
 
+  // Check if series is in favourites
+  useEffect(() => {
+    if (!tvDetails) return;
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    setIsInFavourites(
+      favourites.some((item: any) => item.id === tvDetails.id)
+    );
+  }, [tvDetails]);
+
   const handleNavigationToSeries = (series: Movie & { media_type?: string }) => {
     // const mediaType = series.media_type === 'tv' ? 'tv' : 'movie';
     navigate(`/details/tv/${series.id}`);
   }
+
+  const handleToggleFavourites = () => {
+    if (!tvDetails) return;
+
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    const isSeriesInFavourites = favourites.some((item: any) => item.id === tvDetails.id);
+
+    if (!isSeriesInFavourites) {
+      favourites.push(tvDetails);
+      localStorage.setItem("favourites", JSON.stringify(favourites));
+      setIsInFavourites(true);
+      alert(`✓ Added to favourites: ${tvDetails.name}`);
+    } else {
+      const updated = favourites.filter((item: any) => item.id !== tvDetails.id);
+      localStorage.setItem("favourites", JSON.stringify(updated));
+      setIsInFavourites(false);
+      alert(`✓ Removed from favourites: ${tvDetails.name}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -95,7 +124,7 @@ const TVDetailsPage = () => {
       />
 
       {/* Hero Section */}
-      <TvHero tvDetails={tvDetails} backdropImage={backdropImage} firstAirYear={firstAirYear}/>
+      <TvHero tvDetails={tvDetails} backdropImage={backdropImage} firstAirYear={firstAirYear} isInFavourites={isInFavourites} onToggleFavourites={handleToggleFavourites} onPlayClick={() => setIsPlayerOpen(true)}/>
 
       {/* Overview Section */}
       <TvOverview tvDetails={tvDetails}/>

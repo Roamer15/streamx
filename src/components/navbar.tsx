@@ -104,7 +104,7 @@ const Navbar = () => {
 
               {/* Search Dropdown Modal */}
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto scrollbar-custom">
                   {loading ? (
                     <div className="px-4 py-6 text-center text-gray-400">
                       <div className="inline-block animate-spin">
@@ -140,7 +140,7 @@ const Navbar = () => {
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-white font-medium truncate text-sm">
-                              {result.title}
+                              {result.title || result.name}
                             </p>
                             <p className="text-gray-400 text-xs">
                               {result.release_date ? new Date(result.release_date).getFullYear() : 'N/A'}

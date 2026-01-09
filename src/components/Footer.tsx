@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 border-t border-gray-800 text-gray-300 mt-12">
@@ -6,9 +8,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold bg-linear-to-r from-red-500 to-pink-500 bg-clip-text text-transparent mb-2">
-              StreamX
-            </h3>
+            <Link to="/" className="shrink-0">
+            <div className="text-lg md:text-2xl font-bold bg-linear-to-r from-red-500 to-pink-500 bg-clip-text text-transparent whitespace-nowrap">
+              ChwiiX
+            </div>
+          </Link>
             <p className="text-sm text-gray-400">
               Your gateway to unlimited entertainment
             </p>
