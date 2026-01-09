@@ -1,4 +1,4 @@
-import { useRef, useCallback, memo } from "react";
+import { useRef, useCallback, memo, useState } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { type Movie } from "../types/media.types";
 import MovieCard from "./MovieCard";
@@ -10,10 +10,11 @@ interface CarouselProps {
 }
 
 const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
+  const [isHovering, setIsHovering] = useState<boolean>(false)
   const latestMoviesUrl = url;
   const { movies: LatestMovies, loading, error } = useFetchMovies(latestMoviesUrl);
 
-  const movies: (Movie & { media_type?: string })[] = LatestMovies.slice(0, 12)
+  const movies: (Movie & { media_type?: string })[] = LatestMovies.slice(0, 15)
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +65,8 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
   }
 
   return (
-    <div className="px-4 md:px-8 lg:px-16 py-4">
+    <div className="px-4 md:px-8 lg:px-16 py-4" onMouseOver={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}>
       <h2 className="text-2xl font-bold text-white mb-3">{title}</h2>
 
       {/* Mobile Grid View */}
@@ -81,6 +83,8 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
           ref={scrollContainerRef}
           id="latest-movies-scroll"
           className="flex gap-4 overflow-x-hidden overflow-y-hidden scroll-smooth pb-0"
+          onMouseOver={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
           style={{ scrollBehavior: "smooth" }}
         >
           {movies.map((movie) => (
@@ -91,7 +95,7 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
         {/* Navigation Arrows */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 bg-red-600 hover:bg-red-700 hover:cursor-pointer text-white p-2 rounded-full transition-all duration-300 hidden md:block"
+          className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 bg-red-600 hover:bg-red-700 hover:cursor-pointer text-white p-2 rounded-full transition-all duration-300 hidden md:block ${isHovering ? "opacity-100" : "opacity-0 pointer-events-none"}`}
           title="Scroll left"
         >
           <svg
@@ -111,7 +115,7 @@ const Carousel = memo(({title, url, onMovieClick}: CarouselProps) => {
 
         <button
           onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all duration-300 hidden md:block"
+          className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all duration-300 hidden md:block ${isHovering ? "opacity-100" : "opacity-0 pointer-events-none"}`}
           title="Scroll right"
         >
           <svg
