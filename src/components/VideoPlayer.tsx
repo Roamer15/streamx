@@ -41,6 +41,7 @@ export const VideoPlayer = ({ isOpen, onClose, mediaUrl, title }: VideoPlayerPro
               className="w-full h-full border-0"
               allowFullScreen
               title={title}
+              referrerPolicy="origin"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             />
           </div>
