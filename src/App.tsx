@@ -4,19 +4,23 @@ import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes, Route } from "react-router";
 import SidebarProvider from "./context/SidebarContext";
 import { DetailMovieProvider } from "./context/DetailMovieProvider";
+import { FeedbackProvider } from "./context/FeedbackContext";
 import { useSidebar } from "./hooks/useSidebar";
+import { useFeedback } from "./hooks/useFeedback";
 import Home from "./pages/Home";
 import DetailsPage from "./pages/DetailsPage";
 import TVDetailsPage from "./pages/TVDetailsPage";
 import Search from "./pages/Search";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import FeedbackModal from "./components/FeedbackModal";
 import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Favourites from "./pages/Favourites";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
+  const { isFeedbackModalOpen, closeFeedbackModal } = useFeedback();
 
   return (
     <DetailMovieProvider>
@@ -38,18 +42,21 @@ function AppContent() {
           <Route path="/favourites" element={<Favourites />} />
         </Routes>
       </main>
-      <Footer></Footer>
+      <Footer />
+      <FeedbackModal isOpen={isFeedbackModalOpen} onClose={closeFeedbackModal} />
     </DetailMovieProvider>
   );
 }
 
 function App() {
   return (
-    <SidebarProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </SidebarProvider>
+    <FeedbackProvider>
+      <SidebarProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </SidebarProvider>
+    </FeedbackProvider>
   );
 }
 

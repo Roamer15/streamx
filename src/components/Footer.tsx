@@ -1,6 +1,9 @@
+import { MessageSquare } from "lucide-react";
 import { Link } from "react-router";
+import { useFeedback } from "../hooks/useFeedback";
 
 const Footer = () => {
+  const { openFeedbackModal } = useFeedback();
   return (
     <footer className="bg-gray-900 border-t border-gray-800 text-gray-300 mt-12">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-12">
@@ -46,17 +49,18 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
+           <div>
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <p className="text-sm text-gray-400 mb-2">
               Have questions or feedback?
             </p>
-            <a
-              href="mailto:support@streamx.com"
-              className="text-red-500 hover:text-red-400 transition-colors text-sm"
+            <button
+              onClick={openFeedbackModal}
+              className="text-red-500 hover:text-red-400 transition-colors text-sm flex items-center gap-2"
             >
-              support@chwiix.com
-            </a>
+              <MessageSquare size={16} />
+              Send Feedback
+            </button>
           </div>
         </div>
 
