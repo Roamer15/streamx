@@ -1,10 +1,10 @@
-# StreamX
+# ChwiiX
 
-A modern, feature-rich streaming platform for discovering movies and TV shows. Built with React, TypeScript, and Vite, StreamX leverages the TMDB API to provide users with an extensive catalog of films and television content.
+A modern, feature-rich streaming platform for discovering movies and TV shows. Built with React, TypeScript, and Vite, ChwiiX leverages the TMDB API to provide users with an extensive catalog of films and television content.
 
 ## About the Project
 
-StreamX is a fully functional streaming discovery application that allows users to:
+ChwiiX is a fully functional streaming discovery application that allows users to:
 - Browse trending, latest, and top-rated movies and TV shows
 - Explore content by genre (Anime, K-Drama, Bollywood, Martial Arts, Animation)
 - Search for specific movies and TV shows
@@ -120,8 +120,3 @@ Potential features for future versions:
 - Streaming provider information
 - Advanced filters and sorting options
 - Offline support with caching
-
-## License
-
-This project is part of the RebaseCodeCamp 2026 bootcamp curriculum.
-import reactDom from 'eslint-plugin-react-dom'
