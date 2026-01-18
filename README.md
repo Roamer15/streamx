@@ -14,7 +14,7 @@ ChwiiX is a fully functional streaming discovery application that allows users t
 
 The project is built as part of the RebaseCodeCamp 2026 bootcamp, showcasing modern React development practices with TypeScript.
 
-## What We've Built
+## What I've Built
 
 ### Core Features
 - **Home Page**: Displays multiple carousels with trending content, latest releases, and genre-specific collections
