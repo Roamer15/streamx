@@ -7,6 +7,8 @@ import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
 import type { Movie } from "../types/media.types";
 import Cast from "../components/Cast";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export interface Cast {
   id: number;
@@ -19,6 +21,7 @@ export default function DetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const context = useContext(DetailMovieContext);
+  const mySwal = withReactContent(Swal);
 
   if (!context) {
     throw new Error("DetailMovieContext must be used within a provider");
@@ -42,7 +45,7 @@ export default function DetailsPage() {
     const fetchMovieDetails = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
+          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -65,7 +68,7 @@ export default function DetailsPage() {
       try {
         setCastLoading(true);
         const response = await fetch(
-          `${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`
+          `${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`,
         );
         const data = await response.json();
         setCast(data.cast?.slice(0, 8) || []);
@@ -86,7 +89,7 @@ export default function DetailsPage() {
     const fetchRuntime = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
+          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -105,28 +108,38 @@ export default function DetailsPage() {
   // Check if movie is in favourites
   useEffect(() => {
     if (!selectedMovie) return;
-    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    const favourites =
+      JSON.parse(localStorage.getItem("favourites") || "[]") || [];
     setIsInFavourites(
-      favourites.some((item: Movie) => item.id === selectedMovie.id)
+      favourites.some((item: Movie) => item.id === selectedMovie.id),
     );
   }, [selectedMovie]);
 
   const handleToggleFavourites = () => {
     if (!selectedMovie) return;
 
-    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") || [];
-    const isMovieInFavourites = favourites.some((item: Movie) => item.id === selectedMovie.id);
+    const favourites =
+      JSON.parse(localStorage.getItem("favourites") || "[]") || [];
+    const isMovieInFavourites = favourites.some(
+      (item: Movie) => item.id === selectedMovie.id,
+    );
 
     if (!isMovieInFavourites) {
       favourites.push(selectedMovie);
       localStorage.setItem("favourites", JSON.stringify(favourites));
       setIsInFavourites(true);
-      alert(`✓ Added to favourites: ${selectedMovie.title}`);
+      mySwal.fire({
+        title: <p>Added to favourites: {selectedMovie.title}</p>,
+      });
     } else {
-      const updated = favourites.filter((item: Movie) => item.id !== selectedMovie.id);
+      const updated = favourites.filter(
+        (item: Movie) => item.id !== selectedMovie.id,
+      );
       localStorage.setItem("favourites", JSON.stringify(updated));
       setIsInFavourites(false);
-      alert(`✓ Removed from favourites: ${selectedMovie.title}`);
+      mySwal.fire({
+        title: <p>Removed from favourites: {selectedMovie.title}</p>,
+      });
     }
   };
 
@@ -174,12 +187,12 @@ export default function DetailsPage() {
       />
 
       {/* Hero Section */}
-      <DetailsHero 
-        selectedMovie={selectedMovie} 
-        backdropImage={backdropImage} 
-        runtime={runtime} 
-        releaseYear={releaseYear} 
-        handleToggleFavourites={handleToggleFavourites} 
+      <DetailsHero
+        selectedMovie={selectedMovie}
+        backdropImage={backdropImage}
+        runtime={runtime}
+        releaseYear={releaseYear}
+        handleToggleFavourites={handleToggleFavourites}
         isInFavourites={isInFavourites}
         onPlayClick={() => setIsPlayerOpen(true)}
       />
@@ -195,7 +208,7 @@ export default function DetailsPage() {
         ) : cast.length > 0 ? (
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {cast.map((actor) => (
-              <Cast actor={actor}/>
+              <Cast actor={actor} />
             ))}
           </div>
         ) : (
