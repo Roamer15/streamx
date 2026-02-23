@@ -17,6 +17,7 @@ import FeedbackModal from "./components/FeedbackModal";
 import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Favourites from "./pages/Favourites";
+import OfflineBanner from "./components/OfflineBanner";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
@@ -44,6 +45,7 @@ function AppContent() {
       </main>
       <Footer />
       <FeedbackModal isOpen={isFeedbackModalOpen} onClose={closeFeedbackModal} />
+      <OfflineBanner />
     </DetailMovieProvider>
   );
 }
