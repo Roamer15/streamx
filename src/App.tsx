@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import SidebarProvider from "./context/SidebarContext";
 import { DetailMovieProvider } from "./context/DetailMovieProvider";
 import { FeedbackProvider } from "./context/FeedbackContext";
+import { AuthProvider } from "./context/AuthProvider";
 import { useSidebar } from "./hooks/useSidebar";
 import { useFeedback } from "./hooks/useFeedback";
 import Home from "./pages/Home";
@@ -18,6 +19,8 @@ import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Favourites from "./pages/Favourites";
 import OfflineBanner from "./components/OfflineBanner";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
@@ -41,6 +44,8 @@ function AppContent() {
           <Route path="/movies" element={<Movies/>} />
           <Route path="/series" element={<Series/>} />
           <Route path="/favourites" element={<Favourites />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </main>
       <Footer />
@@ -52,13 +57,15 @@ function AppContent() {
 
 function App() {
   return (
-    <FeedbackProvider>
-      <SidebarProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </SidebarProvider>
-    </FeedbackProvider>
+    <AuthProvider>
+      <FeedbackProvider>
+        <SidebarProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </SidebarProvider>
+      </FeedbackProvider>
+    </AuthProvider>
   );
 }
 

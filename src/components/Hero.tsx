@@ -178,7 +178,7 @@ const Hero = () => {
         {/* Navigation Arrows */}
         <button
           onClick={goToPrevious}
-          className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 ${
+          className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 cursor-pointer${
             isHovering ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           title="Previous"
@@ -200,7 +200,7 @@ const Hero = () => {
 
         <button
           onClick={goToNext}
-          className={`absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 ${
+          className={`absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white p-3 rounded-full transition-all duration-300 cursor-pointer${
             isHovering ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           title="Next"

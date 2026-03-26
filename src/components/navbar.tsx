@@ -3,9 +3,11 @@ import { useSidebar } from "../hooks/useSidebar";
 import { useCallback, useRef, useEffect } from "react";
 import { useSearch } from "../hooks/useSearch";
 import type { Movie } from "../types/media.types";
+import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
   const { toggleSidebar } = useSidebar();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { results, loading, searchQuery, setSearchQuery, clearSearch } = useSearch();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -73,7 +75,7 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Right: Search Bar */}
+          {/* Search Bar */}
           <form onSubmit={handleSearch} className="flex-2 md:flex-none">
             <div className="relative w-full md:w-100" ref={dropdownRef}>
               <input
@@ -101,6 +103,7 @@ const Navbar = () => {
                   />
                 </svg>
               </button>
+              
 
               {/* Search Dropdown Modal */}
               {showDropdown && (
@@ -166,6 +169,36 @@ const Navbar = () => {
               )}
             </div>
           </form>
+          <div className="hidden md:flex items-center gap-2 ml-auto shrink-0">
+            {user ? (
+              <>
+                <span className="hidden md:block text-gray-400 text-sm truncate max-w-35">
+                  {user.email}
+                </span>
+                <button
+                  onClick={signOut}
+                  className="px-3 py-1.5 text-sm text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 rounded-lg transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-3 py-1.5 text-sm text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 rounded-lg transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </nav>
     </>
