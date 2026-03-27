@@ -45,26 +45,31 @@ export default function Home() {
         title="Trending Now"
         url={trendingMoviesUrl}
         onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
       />
       <Carousel
         title="Latest Movies"
         url={latestMoviesUrl}
         onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
       />
       <Carousel
         title="Latest Series"
         url={latestSeriesUrl}
         onMovieClick={handleNavigationToSeries}
+        accentLastWord
       />
       <Carousel
         title="Top Rated Movies"
         url={TopMoviesUrl}
         onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
       />
       <Carousel
         title="Top Rated Series"
         url={TopSeriesUrl}
         onMovieClick={handleNavigationToSeries}
+        accentLastWord
       />
       <Carousel
         title="Anime"
@@ -75,6 +80,7 @@ export default function Home() {
         title="K Drama"
         url={kDramaUrl}
         onMovieClick={handleNavigationToSeries}
+        accentLastWord
       />
       <Carousel
         title="Bollywood"
@@ -90,6 +96,7 @@ export default function Home() {
         title="Martial Arts"
         url={martialArtUrl}
         onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
       />
     </>
   );

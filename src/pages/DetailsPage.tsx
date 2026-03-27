@@ -23,9 +23,7 @@ export default function DetailsPage() {
   const context = useContext(DetailMovieContext);
   const mySwal = withReactContent(Swal);
 
-  if (!context) {
-    throw new Error("DetailMovieContext must be used within a provider");
-  }
+  if (!context) throw new Error("DetailMovieContext must be used within a provider");
 
   const { selectedMovie, setSelectedMovie } = context;
   const [cast, setCast] = useState<Cast[]>([]);
@@ -34,112 +32,75 @@ export default function DetailsPage() {
   const [isInFavourites, setIsInFavourites] = useState(false);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
-  // Fetch Movie Details when selectedMovie is not available
   useEffect(() => {
-    if (selectedMovie && id && parseInt(id) === selectedMovie.id) {
-      return; // Use context selectedMovie if it matches URL id
-    }
-
+    if (selectedMovie && id && parseInt(id) === selectedMovie.id) return;
     if (!id) return;
-
     const fetchMovieDetails = async () => {
       try {
-        const response = await fetch(
-          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`,
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
         setSelectedMovie(data);
-      } catch (error) {
-        console.error("Error fetching movie details:", error);
+      } catch (err) {
+        console.error("Error fetching movie details:", err);
       }
     };
-
     fetchMovieDetails();
   }, [id, selectedMovie, setSelectedMovie]);
 
-  // Fetch Cast Data
   useEffect(() => {
     if (!id) return;
-
     const fetchCast = async () => {
       try {
         setCastLoading(true);
-        const response = await fetch(
-          `${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`,
-        );
-        const data = await response.json();
+        const res = await fetch(`${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`);
+        const data = await res.json();
         setCast(data.cast?.slice(0, 8) || []);
-      } catch (error) {
-        console.error("Error fetching cast:", error);
+      } catch (err) {
+        console.error("Error fetching cast:", err);
       } finally {
         setCastLoading(false);
       }
     };
-
     fetchCast();
   }, [id]);
 
-  // Fetch Movie Runtime
   useEffect(() => {
     if (!id) return;
-
     const fetchRuntime = async () => {
       try {
-        const response = await fetch(
-          `${BASE_URL}/movie/${id}?api_key=${API_KEY}`,
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
         setRuntime(data.runtime || null);
-      } catch (error) {
-        console.error("Error fetching runtime:", error);
+      } catch (err) {
+        console.error("Error fetching runtime:", err);
         setRuntime(null);
       }
     };
-
     fetchRuntime();
   }, [id]);
 
-  // Check if movie is in favourites
   useEffect(() => {
     if (!selectedMovie) return;
-    const favourites =
-      JSON.parse(localStorage.getItem("favourites") || "[]") || [];
-    setIsInFavourites(
-      favourites.some((item: Movie) => item.id === selectedMovie.id),
-    );
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]");
+    setIsInFavourites(favourites.some((item: Movie) => item.id === selectedMovie.id));
   }, [selectedMovie]);
 
   const handleToggleFavourites = () => {
     if (!selectedMovie) return;
-
-    const favourites =
-      JSON.parse(localStorage.getItem("favourites") || "[]") || [];
-    const isMovieInFavourites = favourites.some(
-      (item: Movie) => item.id === selectedMovie.id,
-    );
-
-    if (!isMovieInFavourites) {
+    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]");
+    const inFav = favourites.some((item: Movie) => item.id === selectedMovie.id);
+    if (!inFav) {
       favourites.push(selectedMovie);
       localStorage.setItem("favourites", JSON.stringify(favourites));
       setIsInFavourites(true);
-      mySwal.fire({
-        title: <p>Added to favourites: {selectedMovie.title}</p>,
-      });
+      mySwal.fire({ title: <p>Added to favourites: {selectedMovie.title}</p> });
     } else {
-      const updated = favourites.filter(
-        (item: Movie) => item.id !== selectedMovie.id,
-      );
+      const updated = favourites.filter((item: Movie) => item.id !== selectedMovie.id);
       localStorage.setItem("favourites", JSON.stringify(updated));
       setIsInFavourites(false);
-      mySwal.fire({
-        title: <p>Removed from favourites: {selectedMovie.title}</p>,
-      });
+      mySwal.fire({ title: <p>Removed from favourites: {selectedMovie.title}</p> });
     }
   };
 
@@ -148,21 +109,30 @@ export default function DetailsPage() {
     navigate(`/details/movie/${movie.id}`);
   };
 
-  // Error state if movie not found
+  // Not found
   if (!selectedMovie || (id && parseInt(id) !== selectedMovie.id)) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+      <div
+        className="min-h-screen flex items-center justify-center px-4"
+        style={{ background: "#0e0e0e" }}
+      >
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1
+            className="text-4xl font-extrabold text-white mb-4"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
+          >
             Movie Not Found
           </h1>
-          <p className="text-gray-400 mb-8 text-lg">
-            The movie you are looking for does not exist. Please go back and
-            select a valid movie.
+          <p className="mb-8 text-lg" style={{ color: "#adaaaa" }}>
+            The movie you're looking for doesn't exist.
           </p>
           <button
             onClick={() => navigate("/")}
-            className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+            className="px-8 py-3 rounded-full text-sm font-bold transition-all hover:opacity-90"
+            style={{
+              background: "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)",
+              color: "#000",
+            }}
           >
             ← Back to Home
           </button>
@@ -171,14 +141,11 @@ export default function DetailsPage() {
     );
   }
 
-  const backdropImage =
-    selectedMovie.backdrop_path || selectedMovie.poster_path;
+  const backdropImage = selectedMovie.backdrop_path || selectedMovie.poster_path;
   const releaseYear = selectedMovie.release_date?.split("-")[0] || "N/A";
 
-  //TSX
   return (
-    <div className="bg-gray-950">
-      {/* Video Player Modal */}
+    <div style={{ background: "#0e0e0e" }}>
       <VideoPlayer
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
@@ -186,7 +153,6 @@ export default function DetailsPage() {
         title={selectedMovie.title}
       />
 
-      {/* Hero Section */}
       <DetailsHero
         selectedMovie={selectedMovie}
         backdropImage={backdropImage}
@@ -197,42 +163,48 @@ export default function DetailsPage() {
         onPlayClick={() => setIsPlayerOpen(true)}
       />
 
-      {/* Cast Section */}
-      <div className="px-4 md:px-8 lg:px-16 py-12">
-        <h2 className="text-3xl font-bold text-white mb-8">Cast</h2>
+      {/* Cast */}
+      <div className="px-6 md:px-14 py-10">
+        <h2
+          className="text-2xl font-extrabold text-white mb-7"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
+        >
+          Cast
+        </h2>
 
         {castLoading ? (
-          <div className="flex items-center justify-center h-40">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
+          <div className="flex items-center justify-center h-32">
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2"
+              style={{ borderColor: "#ff8d8f" }}
+            />
           </div>
         ) : cast.length > 0 ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
             {cast.map((actor) => (
-              <Cast actor={actor} />
+              <Cast key={actor.id} actor={actor} />
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No cast information available</p>
+          <p className="text-sm" style={{ color: "#adaaaa" }}>
+            No cast information available.
+          </p>
         )}
       </div>
 
-      {/* Similar Movies Section */}
-      <div className="py-8">
-        <Carousel
-          title="Similar Movies"
-          url={`${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}`}
-          onMovieClick={handleMovieClick}
-        />
-      </div>
-
-      {/* Recommendations Section */}
-      <div className="py-8">
-        <Carousel
-          title="You Might Also Like"
-          url={`${BASE_URL}/movie/${id}/recommendations?api_key=${API_KEY}`}
-          onMovieClick={handleMovieClick}
-        />
-      </div>
+      {/* Similar & Recommendations */}
+      <Carousel
+        title="Similar Movies"
+        url={`${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}`}
+        onMovieClick={handleMovieClick}
+        accentLastWord
+      />
+      <Carousel
+        title="You Might Also Like"
+        url={`${BASE_URL}/movie/${id}/recommendations?api_key=${API_KEY}`}
+        onMovieClick={handleMovieClick}
+        accentLastWord
+      />
     </div>
   );
 }

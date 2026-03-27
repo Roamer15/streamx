@@ -31,7 +31,7 @@ function AppContent() {
       <Navbar />
       <Sidebar />
       <main
-        className={`transition-all duration-300 ${
+        className={`transition-all duration-300 pt-14 ${
           isSidebarOpen ? "md:ml-64" : "md:ml-0"
         }`}
       >

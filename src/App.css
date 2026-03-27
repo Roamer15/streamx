@@ -1,43 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 @import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-void-black: #0e0e0e;
+  --color-primary-ruby: #ff8d8f;
+  --color-primary-dim: #e9003a;
+  --color-secondary: #fe81a3;
+
+  /* Surface tiers */
+  --color-surface-lowest: #000000;
+  --color-surface-low: #131313;
+  --color-surface: #1a1919;
+  --color-surface-high: #201f1f;
+  --color-surface-highest: #262626;
+
+  /* Text */
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #adaaaa;
+  --color-outline-variant: #484847;
+
+  /* Fonts */
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
 
 @layer base {
   html,
   body,
   #root {
-    @apply bg-gray-950;
+    background-color: #0e0e0e;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
   }
 }
 
-/* Custom CSS utilities go here, NOT inside @theme */
 @layer utilities {
+  /* Scrollbar */
   .scrollbar-custom::-webkit-scrollbar {
     width: 6px;
-  }
-  
-  .scrollbar-custom::-webkit-scrollbar-track {
-    background: theme('colors.gray.900');
-    border-radius: 10px;
-  }
-  
-  .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: theme('colors.gray.600');
-    border-radius: 10px;
-  }
-  
-  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.yellow.500');
+    height: 6px;
   }
 
-  /* For Firefox support */
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: #131313;
+    border-radius: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #ff8d8f;
+  }
+
   .scrollbar-custom {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.600') theme('colors.gray.900');
+    scrollbar-color: #262626 #131313;
   }
 
+  /* Shimmer skeleton */
   .shimmer {
     position: relative;
     overflow: hidden;
-    background-color: #1f2937; /* gray-800 */
+    background-color: #1a1919;
   }
 
   .shimmer::after {
@@ -50,8 +78,8 @@
     background-image: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 0,
-      rgba(255, 255, 255, 0.05) 20%,
-      rgba(255, 255, 255, 0.1) 60%,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(255, 255, 255, 0.08) 60%,
       rgba(255, 255, 255, 0)
     );
     animation: shimmer 2s infinite;
@@ -62,5 +90,27 @@
     100% {
       transform: translateX(100%);
     }
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(38, 38, 38, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Gradient CTA */
+  .btn-primary {
+    background: linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%);
+  }
+
+  /* Ghost border */
+  .ghost-border {
+    border: 1px solid rgba(72, 72, 71, 0.2);
+  }
+
+  /* Font display */
+  .font-display {
+    font-family: 'Manrope', sans-serif;
   }
 }
