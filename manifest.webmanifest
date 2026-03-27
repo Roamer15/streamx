@@ -1,0 +1,17 @@
+{
+  "name": "ChwiiX",
+  "short_name": "ChwiiX",
+  "description": "Discover movies and TV shows - ChwiiX streaming discovery platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": [
+    {
+      "src": "/chwiix.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
