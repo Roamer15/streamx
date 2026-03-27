@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes, Route } from "react-router";
 import SidebarProvider from "./context/SidebarContext";
 import { DetailMovieProvider } from "./context/DetailMovieProvider";
+import { FeedbackProvider } from "./context/FeedbackContext";
 import { AuthProvider } from "./context/AuthProvider";
 import { useSidebar } from "./hooks/useSidebar";
 import { useFeedback } from "./hooks/useFeedback";
@@ -57,11 +58,13 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
+      <FeedbackProvider>
         <SidebarProvider>
           <BrowserRouter>
             <AppContent />
           </BrowserRouter>
         </SidebarProvider>
+      </FeedbackProvider>
     </AuthProvider>
   );
 }

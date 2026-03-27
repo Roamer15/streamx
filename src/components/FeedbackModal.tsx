@@ -40,8 +40,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
       setSubmitted(true);
       setTimeout(() => {
         onClose();
-        resetForm();
-      }, 2000);
+      }, 100000000);
     } catch (err) {
       setError('Failed to submit feedback. Please try again.');
       console.error(err);
