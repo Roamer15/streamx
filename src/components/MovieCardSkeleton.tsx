@@ -1,5 +1,5 @@
 export const MovieSkeleton = () => (
-  <div className="shrink-0 w-27 md:w-45 animate-pulse">
+  <div className="shrink-0 w-full animate-pulse">
     {/* The Poster Area */}
     <div className="shimmer rounded-lg aspect-2/3 w-full mb-2"></div>
     {/* The Title Line */}

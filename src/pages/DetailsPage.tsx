@@ -95,12 +95,41 @@ export default function DetailsPage() {
       favourites.push(selectedMovie);
       localStorage.setItem("favourites", JSON.stringify(favourites));
       setIsInFavourites(true);
-      mySwal.fire({ title: <p>Added to favourites: {selectedMovie.title}</p> });
+      mySwal.fire({
+        html: (
+          <div style={{ fontFamily: "'Manrope', sans-serif", display: "flex", alignItems: "center", gap: "8px"}}>
+            <div style={{ fontSize: "0.75rem", marginBottom: "4px" }}>❤️</div>
+            <div style={{ color: "#ff8d8f", fontWeight: 700, fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>Added to Favourites</div>
+            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom:"4px"}}>{selectedMovie.title}</div>
+          </div>
+        ),
+        showConfirmButton: false,
+        timer: 2200,
+        timerProgressBar: true,
+        position: "top-end",
+        toast: true,
+        customClass: { popup: "swal-cinematic-toast" },
+      });
     } else {
       const updated = favourites.filter((item: Movie) => item.id !== selectedMovie.id);
       localStorage.setItem("favourites", JSON.stringify(updated));
       setIsInFavourites(false);
-      mySwal.fire({ title: <p>Removed from favourites: {selectedMovie.title}</p> });
+      mySwal.fire({
+        html: (
+          <div style={{ fontFamily: "'Manrope', sans-serif", textAlign: "center", display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ fontSize: "0.75rem", marginBottom: "4px" }}>🗑️</div>
+            <div style={{ color: "#adaaaa", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>Removed from Favourites</div>
+            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom: "4px" }}>{selectedMovie.title}</div>
+          </div>
+        ),
+        background: "rgba(19,19,19,0.92)",
+        showConfirmButton: false,
+        timer: 2200,
+        timerProgressBar: true,
+        position: "top-end",
+        toast: true,
+        customClass: { popup: "swal-cinematic-toast" },
+      });
     }
   };
 

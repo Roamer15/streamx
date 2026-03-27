@@ -33,7 +33,6 @@ export default function Home() {
   };
 
   const handleNavigationToSeries = (series: Movie & { media_type?: string }) => {
-      // const mediaType = series.media_type === 'tv' ? 'tv' : 'movie';
       navigate(`/details/tv/${series.id}`);
     }
 

@@ -3,11 +3,12 @@ import useFetchMovies from "../hooks/useFetchMovies";
 import { API_KEY, BASE_URL, IMAGE_PATH } from "../services/api";
 import { type Movie } from "../types/media.types";
 import { genreConversion } from "../services/genreConversion";
+import { useNavigate } from "react-router";
 
 const Hero = () => {
   const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`;
   const { movies: heroMovies, loading, error } = useFetchMovies(latestMoviesUrl);
-
+  const navigate = useNavigate()
   const movies: Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -36,6 +37,10 @@ const Hero = () => {
     loadGenres();
     return () => { isMounted = false; };
   }, [movies]);
+
+  const handleNavigation = (id:number) => {
+    navigate(`details/movie/${id}`)
+  }
 
   const goToSlide = (index: number) => setCurrentIndex(index);
   const goToPrevious = () => setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length);
@@ -191,12 +196,13 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex items-center gap-3 flex-wrap">
             <button
-              className="flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold text-white transition-all hover:opacity-90 hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold text-white transition-all hover:opacity-90 hover:scale-105 cursor-pointer active:scale-95"
               style={{
                 background: "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)",
                 boxShadow: "0 8px 24px rgba(233,0,58,0.35)",
                 color: "#000000",
               }}
+              onClick={() => handleNavigation(currentMovie.id)}
             >
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
@@ -205,7 +211,7 @@ const Hero = () => {
             </button>
 
             <button
-              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium text-white transition-all hover:bg-white/10"
+              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium text-white transition-all hover:bg-white/10 cursor-pointer"
               style={{
                 background: "rgba(38,38,38,0.5)",
                 backdropFilter: "blur(20px)",

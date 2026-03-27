@@ -113,4 +113,16 @@
   .font-display {
     font-family: 'Manrope', sans-serif;
   }
+
+  /* SweetAlert2 cinematic toast */
+  .swal-cinematic-toast {
+    background: rgba(19, 19, 19, 0.92) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 141, 143, 0.15) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 141, 143, 0.08) !important;
+    padding: 8px 10px !important;
+    min-width: 240px !important;
+  }
 }

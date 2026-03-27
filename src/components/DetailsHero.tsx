@@ -116,7 +116,7 @@ export default function DetailsHero({
           <div className="flex gap-3 flex-wrap">
             <button
               onClick={onPlayClick}
-              className="flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold transition-all hover:opacity-90 hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold transition-all hover:opacity-90 hover:scale-105 active:scale-95 cursor-pointer"
               style={{
                 background: "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)",
                 color: "#000000",
@@ -131,7 +131,7 @@ export default function DetailsHero({
 
             <button
               onClick={handleToggleFavourites}
-              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
+              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
               style={
                 isInFavourites
                   ? {
