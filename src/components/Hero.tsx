@@ -54,7 +54,7 @@ const Hero = () => {
   // --- Loading state ---
   if (loading) {
     return (
-      <div className="relative w-full h-[90vh] overflow-hidden" style={{ background: "#0e0e0e" }}>
+      <div className="relative w-full h-[80vh] overflow-hidden" style={{ background: "#0e0e0e" }}>
         <div className="absolute inset-0 animate-pulse" style={{ background: "#131313" }} />
         <div className="absolute inset-0 flex flex-col justify-end px-8 md:px-14 pb-20 z-10">
           <div className="space-y-5 max-w-xl">
@@ -78,7 +78,7 @@ const Hero = () => {
   // --- Error state ---
   if (error) {
     return (
-      <div className="relative w-full h-[90vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
+      <div className="relative w-full h-[80vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
         <div className="text-center">
           <p className="text-lg mb-2" style={{ color: "#ff8d8f" }}>Failed to load movies</p>
           <p className="text-sm" style={{ color: "#adaaaa" }}>{error}</p>
@@ -89,7 +89,7 @@ const Hero = () => {
 
   if (movies.length === 0) {
     return (
-      <div className="relative w-full h-[90vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
+      <div className="relative w-full h-[80vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
         <p style={{ color: "#adaaaa" }}>No movies available</p>
       </div>
     );
@@ -97,7 +97,7 @@ const Hero = () => {
 
   return (
     <div
-      className="relative w-full h-[90vh] overflow-hidden"
+      className="relative w-full h-[80vh] overflow-hidden"
       style={{ background: "#000000" }}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -123,7 +123,7 @@ const Hero = () => {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to right, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.6) 50%, rgba(14,14,14,0.1) 100%)",
+            "linear-gradient(to right, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.6) 25%, rgba(14,14,14,0.1) 100%)",
         }}
       />
       <div
