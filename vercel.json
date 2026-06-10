@@ -1,8 +1,6 @@
 {
   "functions": {
-    "api/tmdb/[...path].ts": {
-      "runtime": "vercel/node@20.x"
-    }
+    "api/tmdb/[...path].ts": {}
   },
   "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
 }
