@@ -9,6 +9,7 @@ import type { Movie } from "../types/media.types";
 import Cast from "../components/Cast";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
 
 export interface Cast {
   id: number;
@@ -31,18 +32,32 @@ export default function DetailsPage() {
   const [runtime, setRuntime] = useState<number | null>(null);
   const [isInFavourites, setIsInFavourites] = useState(false);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [movieLoading, setMovieLoading] = useState(true);
+  const [movieNotFound, setMovieNotFound] = useState(false);
 
   useEffect(() => {
-    if (selectedMovie && id && parseInt(id) === selectedMovie.id) return;
-    if (!id) return;
+    if (selectedMovie && id && parseInt(id) === selectedMovie.id) {
+      setMovieLoading(false);
+      return;
+    }
+    if (!id) {
+      setMovieLoading(false);
+      return;
+    }
     const fetchMovieDetails = async () => {
+      setMovieLoading(true);
+      setMovieNotFound(false);
       try {
         const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setSelectedMovie(data);
+        setMovieNotFound(false);
       } catch (err) {
         console.error("Error fetching movie details:", err);
+        setMovieNotFound(true);
+      } finally {
+        setMovieLoading(false);
       }
     };
     fetchMovieDetails();
@@ -138,8 +153,15 @@ export default function DetailsPage() {
     navigate(`/details/movie/${movie.id}`);
   };
 
+  // Loading state
+  if (movieLoading) {
+    return (
+      <TvDetailsSkeletonLoader/>
+    );
+  }
+
   // Not found
-  if (!selectedMovie || (id && parseInt(id) !== selectedMovie.id)) {
+  if (movieNotFound || !selectedMovie) {
     return (
       <div
         className="min-h-screen flex items-center justify-center px-4"

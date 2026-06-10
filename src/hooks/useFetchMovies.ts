@@ -15,7 +15,7 @@ const useFetchMovies = (baseUrl: string) => {
 
     try {
       // Assuming your API service handles URL params, or append it here:
-      const fetchUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}page=${page}`;
+      const fetchUrl = `${baseUrl}&page=${page}`;
       
       const data = await fetchMovies(fetchUrl);
       
