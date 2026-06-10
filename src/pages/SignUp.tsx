@@ -164,7 +164,7 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-[#484847]"
+              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-outline-variant"
               style={inputStyle}
               onFocus={inputFocus}
               onBlur={inputBlur}
@@ -178,7 +178,7 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-[#484847]"
+              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-outline-variant"
               style={inputStyle}
               onFocus={inputFocus}
               onBlur={inputBlur}
@@ -192,7 +192,7 @@ const SignUp = () => {
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-[#484847]"
+              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all placeholder-outline-variant"
               style={inputStyle}
               onFocus={inputFocus}
               onBlur={inputBlur}

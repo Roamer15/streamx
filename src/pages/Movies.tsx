@@ -87,7 +87,7 @@ function Pagination({
 }
 
 export default function Movies() {
-  const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&page=1`;
+  const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}`;
   const { movies, error, loading, totalPages, currentPage, goToPage } =
     useFetchMovies(url);
   const navigate = useNavigate();
