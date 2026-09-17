@@ -17,6 +17,13 @@ export default function Home() {
   const bollywoodUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=hi&region=IN`; //Try something
   const animationUrl = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16`;
   const martialArtUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28&region=CN&with_original_language=cn`;
+  const horrorUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`;
+  const comedyUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`;
+  const sciFiUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=878`;
+  const thrillerUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=53`;
+  const romanceUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=10749`;
+  const documentaryUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=99`;
+  const nollywoodUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=NG`;
 
   const context = useContext(DetailMovieContext);
   if (!context) {
@@ -94,6 +101,48 @@ export default function Home() {
       <Carousel
         title="Martial Arts"
         url={martialArtUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Horror"
+        url={horrorUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Comedy"
+        url={comedyUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Sci-Fi"
+        url={sciFiUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Thriller"
+        url={thrillerUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Romance"
+        url={romanceUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Documentaries"
+        url={documentaryUrl}
+        onMovieClick={handleNavigationToDetailPage}
+        accentLastWord
+      />
+      <Carousel
+        title="Nollywood"
+        url={nollywoodUrl}
         onMovieClick={handleNavigationToDetailPage}
         accentLastWord
       />
