@@ -1,27 +1,23 @@
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 
-export default async function handler(req: any, res: any) {
-  const { path, api_key: _ignored, ...rest } = req.query;
-  const tmdbPath = Array.isArray(path) ? path.join('/') : path ?? '';
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const tmdbPath = url.pathname.replace(/^\/api\/tmdb\//, '');
 
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(rest)) {
-    if (typeof value === 'string') params.set(key, value);
-    else if (Array.isArray(value)) (value as string[]).forEach(v => params.append(key, v));
-  }
+  const params = url.searchParams;
+  params.delete('api_key');
 
   const apiKey = process.env.TMDB_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'TMDB_API_KEY is not configured' });
-    return;
+    return Response.json({ error: 'TMDB_API_KEY is not configured' }, { status: 500 });
   }
   params.set('api_key', apiKey);
 
   try {
     const response = await fetch(`${TMDB_BASE}/${tmdbPath}?${params.toString()}`);
     const data = await response.json();
-    res.status(response.status).json(data);
+    return Response.json(data, { status: response.status });
   } catch {
-    res.status(500).json({ error: 'Failed to fetch from TMDB' });
+    return Response.json({ error: 'Failed to fetch from TMDB' }, { status: 500 });
   }
 }
