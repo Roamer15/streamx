@@ -197,23 +197,27 @@ export default function DetailsPage() {
 
   return (
     <div style={{ background: "#0e0e0e" }}>
-      <VideoPlayer
-        isOpen={isPlayerOpen}
-        onClose={() => setIsPlayerOpen(false)}
-        mediaType="movie"
-        tmdbId={id!}
-        title={selectedMovie.title}
-      />
-
-      <DetailsHero
-        selectedMovie={selectedMovie}
-        backdropImage={backdropImage}
-        runtime={runtime}
-        releaseYear={releaseYear}
-        handleToggleFavourites={handleToggleFavourites}
-        isInFavourites={isInFavourites}
-        onPlayClick={() => setIsPlayerOpen(true)}
-      />
+      <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+        <div className="lg:col-span-2 order-1">
+          <VideoPlayer
+            isPlaying={isPlayerOpen}
+            onPlayClick={() => setIsPlayerOpen(true)}
+            backdropImage={backdropImage}
+            title={selectedMovie.title}
+            mediaType="movie"
+            tmdbId={id!}
+          />
+        </div>
+        <div className="lg:col-span-1 order-2">
+          <DetailsHero
+            selectedMovie={selectedMovie}
+            runtime={runtime}
+            releaseYear={releaseYear}
+            handleToggleFavourites={handleToggleFavourites}
+            isInFavourites={isInFavourites}
+          />
+        </div>
+      </div>
 
       {/* Cast */}
       <div className="px-6 md:px-14 py-10">

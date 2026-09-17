@@ -4,7 +4,7 @@ import { BASE_URL, API_KEY } from "../services/api";
 import Cast from "../components/Cast";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Movie } from "../types/media.types";
 import TvHero from "../components/TvHero";
 import EpisodeCard from "../components/EpisodeCard";
@@ -27,6 +27,7 @@ const TVDetailsPage = () => {
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState<number | null>(null);
   const [isInFavourites, setIsInFavourites] = useState(false);
+  const playerSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -110,24 +111,28 @@ const TVDetailsPage = () => {
 
   return (
     <div style={{ background: "#0e0e0e" }}>
-      <VideoPlayer
-        isOpen={isPlayerOpen}
-        onClose={() => setIsPlayerOpen(false)}
-        mediaType="tv"
-        tmdbId={id!}
-        season={selectedSeason}
-        episode={selectedEpisode || 1}
-        title={tvDetails?.name || "Series"}
-      />
-
-      <TvHero
-        tvDetails={tvDetails}
-        backdropImage={backdropImage}
-        firstAirYear={firstAirYear}
-        isInFavourites={isInFavourites}
-        onToggleFavourites={handleToggleFavourites}
-        onPlayClick={() => setIsPlayerOpen(true)}
-      />
+      <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+        <div className="lg:col-span-2 order-1" ref={playerSectionRef}>
+          <VideoPlayer
+            isPlaying={isPlayerOpen}
+            onPlayClick={() => setIsPlayerOpen(true)}
+            backdropImage={backdropImage}
+            title={tvDetails?.name || "Series"}
+            mediaType="tv"
+            tmdbId={id!}
+            season={selectedSeason}
+            episode={selectedEpisode || 1}
+          />
+        </div>
+        <div className="lg:col-span-1 order-2">
+          <TvHero
+            tvDetails={tvDetails}
+            firstAirYear={firstAirYear}
+            isInFavourites={isInFavourites}
+            onToggleFavourites={handleToggleFavourites}
+          />
+        </div>
+      </div>
 
       <TvOverview tvDetails={tvDetails} />
 
@@ -189,6 +194,7 @@ const TVDetailsPage = () => {
                 onPlayClick={(ep) => {
                   setSelectedEpisode(ep.episode_number);
                   setIsPlayerOpen(true);
+                  playerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
               />
             ))}
