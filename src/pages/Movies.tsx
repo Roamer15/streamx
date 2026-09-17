@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import MovieCard from "../components/MovieCard";
 import SkeletonLoader from "../components/SkeletonLoader";
 import { API_KEY, BASE_URL } from "../services/api";
+import SEO from "../components/SEO";
 
 function Pagination({
   currentPage,
@@ -94,6 +95,7 @@ export default function Movies() {
 
   return (
     <div className="min-h-screen text-white px-6 md:px-14 py-10" style={{ background: "#0e0e0e" }}>
+      <SEO title="Movies - ChwiiX" description="Browse and discover movies across every genre on ChwiiX." />
       <div className="max-w-7xl mx-auto">
         {/* Page title */}
         <h1

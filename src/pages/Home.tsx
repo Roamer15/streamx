@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { DetailMovieContext } from "../context/SideBarContextLine";
 import { useNavigate } from "react-router";
 import type { Movie } from "../types/media.types";
+import SEO from "../components/SEO";
 
 export default function Home() {
   const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`;
@@ -38,6 +39,10 @@ export default function Home() {
 
   return (
     <>
+      <SEO
+        title="ChwiiX - Discover Movies & TV Shows"
+        description="Browse trending, latest, and top-rated movies and TV shows across every genre. Watch anime, K-drama, Bollywood, and more on ChwiiX."
+      />
       <Hero />
 
       <Carousel
