@@ -5,13 +5,13 @@ import type { Movie } from "../types/media.types";
 interface UseSearchReturn {
   results: Movie[];
   loading: boolean;
+  loadingMore: boolean;
   error: string | null;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   clearSearch: () => void;
-  currentPage: number;
-  totalPages: number;
-  goToPage: (page: number) => void;
+  hasMore: boolean;
+  loadMore: () => void;
 }
 
 /**
@@ -23,6 +23,7 @@ interface UseSearchReturn {
 export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
   const [results, setResults] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +53,8 @@ export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
       return;
     }
 
-    setLoading(true);
+    if (page === 1) setLoading(true);
+    else setLoadingMore(true);
     setError(null);
 
     try {
@@ -73,19 +75,22 @@ export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
             item.poster_path
         );
 
-        setResults(filteredResults);
+        setResults((prev) => (page === 1 ? filteredResults : [...prev, ...filteredResults]));
         setCurrentPage(data.page || 1);
         setTotalPages(data.total_pages || 0);
       }
     } catch (err) {
       if (isMounted.current) {
         setError(err instanceof Error ? err.message : "Failed to search");
-        setResults([]);
-        setTotalPages(0);
+        if (page === 1) {
+          setResults([]);
+          setTotalPages(0);
+        }
       }
     } finally {
       if (isMounted.current) {
         setLoading(false);
+        setLoadingMore(false);
       }
     }
   }, []);
@@ -124,23 +129,24 @@ export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
     }
   }, []);
 
-  const goToPage = useCallback((page: number) => {
-    if (searchQuery.trim() && page > 0 && page <= totalPages) {
-      performSearch(searchQuery, page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  const hasMore = currentPage < totalPages;
+
+  const loadMore = useCallback(() => {
+    if (searchQuery.trim() && currentPage < totalPages) {
+      performSearch(searchQuery, currentPage + 1);
     }
-  }, [searchQuery, totalPages, performSearch]);
+  }, [searchQuery, currentPage, totalPages, performSearch]);
 
   return {
     results,
     loading,
+    loadingMore,
     error,
     searchQuery,
     setSearchQuery: handleSearchInput,
     clearSearch,
-    currentPage,
-    totalPages,
-    goToPage,
+    hasMore,
+    loadMore,
   };
 };
 
