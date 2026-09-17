@@ -1,11 +1,9 @@
 import { Link, useLocation } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
-import useAuth from "../hooks/useAuth";
 import React from "react";
 
 const Sidebar = () => {
   const { isSidebarOpen, closeSidebar } = useSidebar();
-  const { user, signOut } = useAuth();
   const location = useLocation();
 
   const navItems = [
@@ -99,49 +97,6 @@ const Sidebar = () => {
               );
             })}
           </nav>
-
-          {/* Auth section — mobile only */}
-          <div className="md:hidden mt-auto px-3 pb-6 pt-4" style={{ borderTop: "1px solid rgba(72,72,71,0.2)" }}>
-            {user ? (
-              <>
-                <p className="text-gray-500 text-xs truncate px-4 mb-3">{user.email}</p>
-                <button
-                  onClick={() => { signOut(); closeSidebar(); }}
-                  className="w-full flex items-center px-4 py-3 rounded-2xl transition-colors"
-                  style={{ color: "#adaaaa" }}
-                >
-                  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
-                  </svg>
-                  <span className="ml-3 text-sm font-medium">Sign Out</span>
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <Link
-                  to="/login"
-                  onClick={closeSidebar}
-                  className="w-full text-center px-4 py-2.5 rounded-full text-sm font-medium transition-colors"
-                  style={{
-                    color: "#adaaaa",
-                    border: "1px solid rgba(72,72,71,0.3)",
-                  }}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  onClick={closeSidebar}
-                  className="w-full text-center px-4 py-2.5 rounded-full text-sm font-bold text-black transition-colors"
-                  style={{
-                    background: "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)",
-                  }}
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
-          </div>
         </div>
       </aside>
     </>
