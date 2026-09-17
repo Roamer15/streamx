@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import { useTV, type TVDetails } from "../hooks/useTV";
-import { BASE_URL, API_KEY, MEDIA_PATH } from "../services/api";
+import { BASE_URL, API_KEY } from "../services/api";
 import Cast from "../components/Cast";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -113,7 +113,10 @@ const TVDetailsPage = () => {
       <VideoPlayer
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        mediaUrl={`${MEDIA_PATH}/tv/${id}/${selectedSeason}-${selectedEpisode || 1}`}
+        mediaType="tv"
+        tmdbId={id!}
+        season={selectedSeason}
+        episode={selectedEpisode || 1}
         title={tvDetails?.name || "Series"}
       />
 

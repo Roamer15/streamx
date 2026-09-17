@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { DetailMovieContext } from "../context/SideBarContextLine";
-import { BASE_URL, API_KEY, MEDIA_PATH } from "../services/api";
+import { BASE_URL, API_KEY } from "../services/api";
 import DetailsHero from "../components/DetailsHero";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -200,7 +200,8 @@ export default function DetailsPage() {
       <VideoPlayer
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        mediaUrl={`${MEDIA_PATH}/movie/${id}`}
+        mediaType="movie"
+        tmdbId={id!}
         title={selectedMovie.title}
       />
 

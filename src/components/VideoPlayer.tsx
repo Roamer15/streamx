@@ -1,12 +1,43 @@
+import { useMemo, useState } from "react";
+import { embedProviders, DEFAULT_PROVIDER_ID } from "../services/embedProviders";
+
 interface VideoPlayerProps {
   isOpen: boolean;
   onClose: () => void;
-  mediaUrl: string;
   title: string;
+  mediaType: 'movie' | 'tv';
+  tmdbId: string;
+  season?: number;
+  episode?: number;
 }
 
-export const VideoPlayer = ({ isOpen, onClose, mediaUrl, title }: VideoPlayerProps) => {
+const PREFERRED_PROVIDER_STORAGE_KEY = "preferredEmbedProvider";
+
+const getInitialProviderId = () => {
+  const stored = localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
+  if (stored && embedProviders.some((provider) => provider.id === stored)) {
+    return stored;
+  }
+  return DEFAULT_PROVIDER_ID;
+};
+
+export const VideoPlayer = ({ isOpen, onClose, title, mediaType, tmdbId, season, episode }: VideoPlayerProps) => {
+  const [selectedProviderId, setSelectedProviderId] = useState(getInitialProviderId);
+
+  const mediaUrl = useMemo(() => {
+    const provider = embedProviders.find((p) => p.id === selectedProviderId) ?? embedProviders[0];
+    if (mediaType === "movie") {
+      return provider.getMovieUrl(tmdbId);
+    }
+    return provider.getTvUrl(tmdbId, season ?? 1, episode ?? 1);
+  }, [selectedProviderId, mediaType, tmdbId, season, episode]);
+
   if (!isOpen) return null;
+
+  const handleSelectProvider = (id: string) => {
+    setSelectedProviderId(id);
+    localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, id);
+  };
 
   return (
     <div
@@ -33,6 +64,29 @@ export const VideoPlayer = ({ isOpen, onClose, mediaUrl, title }: VideoPlayerPro
         className="w-full max-w-6xl md:max-w-7xl md:px-4"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Server switcher */}
+        <div className="flex flex-wrap items-center gap-2 mb-3 px-1">
+          {embedProviders.map((provider) => {
+            const isActive = provider.id === selectedProviderId;
+            return (
+              <button
+                key={provider.id}
+                onClick={() => handleSelectProvider(provider.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  isActive ? "text-black" : "text-white/80 bg-black/20 hover:bg-white/10"
+                }`}
+                style={
+                  isActive
+                    ? { background: "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)" }
+                    : undefined
+                }
+              >
+                {provider.name}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Video Wrapper */}
         <div className="bg-black shadow-2xl relative group">
           <div className="aspect-video w-full">
