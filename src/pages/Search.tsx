@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { useSearch } from "../hooks/useSearch";
 import type { Movie } from "../types/media.types";
 import MovieCard from "../components/MovieCard";
+import SEO from "../components/SEO";
 
 function Pagination({
   currentPage,
@@ -104,6 +105,10 @@ const Search = () => {
       className="min-h-screen text-white px-6 md:px-14 py-10"
       style={{ background: "#0e0e0e" }}
     >
+      <SEO
+        title={query ? `Search: ${query} - ChwiiX` : "Search - ChwiiX"}
+        description="Search for movies and TV shows on ChwiiX."
+      />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import { useTV, type TVDetails } from "../hooks/useTV";
-import { BASE_URL, API_KEY } from "../services/api";
+import { BASE_URL, API_KEY, IMAGE_PATH } from "../services/api";
 import Cast from "../components/Cast";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -10,6 +10,7 @@ import TvHero from "../components/TvHero";
 import EpisodeCard from "../components/EpisodeCard";
 import TvOverview from "../components/TvOverview";
 import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
+import SEO from "../components/SEO";
 
 export interface Cast {
   id: number;
@@ -111,6 +112,12 @@ const TVDetailsPage = () => {
 
   return (
     <div style={{ background: "#0e0e0e" }}>
+      <SEO
+        title={`${tvDetails.name} (${firstAirYear}) - Watch Online | ChwiiX`}
+        description={tvDetails.overview ? tvDetails.overview.slice(0, 160) : `Watch ${tvDetails.name} online on ChwiiX.`}
+        image={tvDetails.backdrop_path ? `${IMAGE_PATH}${tvDetails.backdrop_path}` : undefined}
+        type="video.tv_show"
+      />
       <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
         <div className="lg:col-span-2 order-1" ref={playerSectionRef}>
           <VideoPlayer

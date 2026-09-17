@@ -4,6 +4,7 @@ import MovieCard from "../components/MovieCard";
 import SkeletonLoader from "../components/SkeletonLoader";
 import { API_KEY, BASE_URL } from "../services/api";
 import useFetchMovies from "../hooks/useFetchMovies";
+import SEO from "../components/SEO";
 
 function Pagination({
   currentPage,
@@ -93,6 +94,7 @@ export default function Series() {
 
   return (
     <div className="min-h-screen text-white px-6 md:px-14 py-10" style={{ background: "#0e0e0e" }}>
+      <SEO title="TV Series - ChwiiX" description="Browse and discover TV series across every genre on ChwiiX." />
       <div className="max-w-7xl mx-auto">
         {/* Page title */}
         <h1
