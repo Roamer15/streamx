@@ -1,84 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useSearch } from "../hooks/useSearch";
 import type { Movie } from "../types/media.types";
 import MovieCard from "../components/MovieCard";
-
-function Pagination({
-  currentPage,
-  totalPages,
-  goToPage,
-}: {
-  currentPage: number;
-  totalPages: number;
-  goToPage: (page: number) => void;
-}) {
-  const pages = Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-    if (totalPages <= 5) return i + 1;
-    if (currentPage <= 3) return i + 1;
-    if (currentPage >= totalPages - 2) return totalPages - 4 + i;
-    return currentPage - 2 + i;
-  });
-
-  const btnBase: React.CSSProperties = {
-    borderRadius: "999px",
-    fontWeight: 600,
-    fontSize: "0.875rem",
-    transition: "all 0.2s",
-    padding: "0.5rem 1.25rem",
-  };
-
-  return (
-    <div className="flex justify-center items-center gap-2 mt-12 mb-8 flex-wrap">
-      <button
-        onClick={() => goToPage(currentPage - 1)}
-        disabled={currentPage === 1}
-        style={{
-          ...btnBase,
-          background: "#1a1919",
-          color: currentPage === 1 ? "#484847" : "#adaaaa",
-          border: "1px solid rgba(72,72,71,0.25)",
-          cursor: currentPage === 1 ? "not-allowed" : "pointer",
-        }}
-      >
-        ← Prev
-      </button>
-      {pages.map((pageNum) => (
-        <button
-          key={pageNum}
-          onClick={() => goToPage(pageNum)}
-          style={{
-            ...btnBase,
-            padding: "0.5rem 0.9rem",
-            background:
-              currentPage === pageNum
-                ? "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)"
-                : "#1a1919",
-            color: currentPage === pageNum ? "#000" : "#adaaaa",
-            border:
-              currentPage === pageNum ? "none" : "1px solid rgba(72,72,71,0.25)",
-            cursor: "pointer",
-          }}
-        >
-          {pageNum}
-        </button>
-      ))}
-      <button
-        onClick={() => goToPage(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        style={{
-          ...btnBase,
-          background: "#1a1919",
-          color: currentPage === totalPages ? "#484847" : "#adaaaa",
-          border: "1px solid rgba(72,72,71,0.25)",
-          cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-        }}
-      >
-        Next →
-      </button>
-    </div>
-  );
-}
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -87,17 +11,33 @@ const Search = () => {
   const {
     results,
     loading,
+    loadingMore,
     error,
     searchQuery,
     setSearchQuery,
-    currentPage,
-    totalPages,
-    goToPage,
+    hasMore,
+    loadMore,
   } = useSearch();
 
   useEffect(() => {
     if (query) setSearchQuery(query);
   }, [query, setSearchQuery]);
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasMore || loadingMore) return;
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadMore();
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loadMore]);
 
   return (
     <div
@@ -163,8 +103,8 @@ const Search = () => {
         {!loading && query && results.length > 0 ? (
           <div>
             <p className="text-sm mb-6" style={{ color: "#adaaaa" }}>
-              Page {currentPage} of {totalPages} &mdash; {results.length} result
-              {results.length !== 1 ? "s" : ""} on this page
+              {results.length} result
+              {results.length !== 1 ? "s" : ""}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5">
@@ -185,12 +125,31 @@ const Search = () => {
               ))}
             </div>
 
-            {totalPages > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                goToPage={goToPage}
-              />
+            <div ref={sentinelRef} className="h-4" />
+
+            {loadingMore && (
+              <div className="flex justify-center py-8">
+                <svg
+                  className="w-8 h-8 animate-spin"
+                  style={{ color: "#ff8d8f" }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </div>
+            )}
+
+            {!hasMore && results.length > 0 && (
+              <p className="text-center text-xs py-8" style={{ color: "#adaaaa" }}>
+                You've reached the end
+              </p>
             )}
           </div>
         ) : !loading && query ? (

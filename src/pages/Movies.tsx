@@ -1,96 +1,31 @@
-import useFetchMovies from "../hooks/useFetchMovies";
+import { useEffect, useRef } from "react";
+import useInfiniteMovies from "../hooks/useInfiniteMovies";
 import type { Movie } from "../types/media.types";
 import { useNavigate } from "react-router";
 import MovieCard from "../components/MovieCard";
 import SkeletonLoader from "../components/SkeletonLoader";
 import { API_KEY, BASE_URL } from "../services/api";
 
-function Pagination({
-  currentPage,
-  totalPages,
-  goToPage,
-}: {
-  currentPage: number;
-  totalPages: number;
-  goToPage: (page: number) => void;
-}) {
-  const pages = Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-    if (totalPages <= 5) return i + 1;
-    if (currentPage <= 3) return i + 1;
-    if (currentPage >= totalPages - 2) return totalPages - 4 + i;
-    return currentPage - 2 + i;
-  });
-
-  const btnBase: React.CSSProperties = {
-    borderRadius: "999px",
-    fontWeight: 600,
-    fontSize: "0.875rem",
-    transition: "all 0.2s",
-    cursor: "pointer",
-    padding: "0.5rem 1.25rem",
-  };
-
-  return (
-    <div className="flex justify-center items-center gap-2 mt-12 mb-8 flex-wrap">
-      <button
-        onClick={() => goToPage(currentPage - 1)}
-        disabled={currentPage === 1}
-        style={{
-          ...btnBase,
-          background: currentPage === 1 ? "#1a1919" : "rgba(38,38,38,0.8)",
-          color: currentPage === 1 ? "#484847" : "#adaaaa",
-          border: "1px solid rgba(72,72,71,0.25)",
-          cursor: currentPage === 1 ? "not-allowed" : "pointer",
-        }}
-      >
-        ← Prev
-      </button>
-
-      {pages.map((pageNum) => (
-        <button
-          key={pageNum}
-          onClick={() => goToPage(pageNum)}
-          style={{
-            ...btnBase,
-            padding: "0.5rem 0.9rem",
-            background:
-              currentPage === pageNum
-                ? "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)"
-                : "#1a1919",
-            color: currentPage === pageNum ? "#000" : "#adaaaa",
-            border:
-              currentPage === pageNum
-                ? "none"
-                : "1px solid rgba(72,72,71,0.25)",
-          }}
-        >
-          {pageNum}
-        </button>
-      ))}
-
-      <button
-        onClick={() => goToPage(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        style={{
-          ...btnBase,
-          background:
-            currentPage === totalPages ? "#1a1919" : "rgba(38,38,38,0.8)",
-          color: currentPage === totalPages ? "#484847" : "#adaaaa",
-          border: "1px solid rgba(72,72,71,0.25)",
-          cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-        }}
-      >
-        Next →
-      </button>
-    </div>
-  );
-}
-
 export default function Movies() {
   const url = `${BASE_URL}/discover/movie?api_key=${API_KEY}`;
-  const { movies, error, loading, totalPages, currentPage, goToPage } =
-    useFetchMovies(url);
+  const { movies, error, loading, loadingMore, hasMore, loadMore } =
+    useInfiniteMovies(url);
   const navigate = useNavigate();
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasMore || loadingMore) return;
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadMore();
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loadMore]);
 
   return (
     <div className="min-h-screen text-white px-6 md:px-14 py-10" style={{ background: "#0e0e0e" }}>
@@ -136,12 +71,31 @@ export default function Movies() {
               ))}
             </div>
 
-            {totalPages > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                goToPage={goToPage}
-              />
+            <div ref={sentinelRef} className="h-4" />
+
+            {loadingMore && (
+              <div className="flex justify-center py-8">
+                <svg
+                  className="w-8 h-8 animate-spin"
+                  style={{ color: "#ff8d8f" }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </div>
+            )}
+
+            {!hasMore && movies.length > 0 && (
+              <p className="text-center text-xs py-8" style={{ color: "#adaaaa" }}>
+                You've reached the end
+              </p>
             )}
           </div>
         )}
