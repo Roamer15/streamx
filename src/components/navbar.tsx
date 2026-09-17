@@ -3,11 +3,9 @@ import { useSidebar } from "../hooks/useSidebar";
 import { useCallback, useRef, useEffect } from "react";
 import { useSearch } from "../hooks/useSearch";
 import type { Movie } from "../types/media.types";
-import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
   const { toggleSidebar } = useSidebar();
-  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { results, loading, searchQuery, setSearchQuery, clearSearch } =
@@ -242,43 +240,6 @@ const Navbar = () => {
               )}
             </div>
           </form>
-        </div>
-
-        {/* Auth */}
-        <div className="hidden md:flex items-center gap-2 shrink-0">
-          {user ? (
-            <>
-              <span className="text-on-surface-variant text-xs truncate max-w-32">
-                {user.email}
-              </span>
-              <button
-                onClick={signOut}
-                className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-white rounded-full transition-colors ghost-border"
-                style={{ border: "1px solid rgba(72,72,71,0.3)" }}
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-white transition-colors"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="px-5 py-2 text-sm font-bold text-white rounded-full transition-all hover:opacity-90"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #ff8d8f 0%, #e9003a 100%)",
-                }}
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
         </div>
       </div>
     </nav>
