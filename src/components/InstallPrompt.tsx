@@ -59,7 +59,7 @@ const InstallPrompt = () => {
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 text-sm px-4 py-2 rounded-full shadow-lg"
+      className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 text-sm px-4 py-2 rounded-full shadow-lg"
       style={{
         background: "#1a1919",
         border: "1px solid rgba(72,72,71,0.25)",
