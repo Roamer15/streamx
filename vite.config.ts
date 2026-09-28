@@ -27,9 +27,10 @@ export default defineConfig(({ mode }) => {
       },
       workbox: {
         runtimeCaching: [
-          // TMDB API JSON — NetworkFirst (serve fresh, fall back to cache when offline)
+          // TMDB requests go through this project's own same-origin proxy at /api/tmdb,
+          // not directly to api.themoviedb.org — match the proxy path, not the TMDB domain.
           {
-            urlPattern: /^https:\/\/api\.themoviedb\.org\//i,
+            urlPattern: /^\/api\/tmdb\//,
             handler: "NetworkFirst",
             options: {
               cacheName: "tmdb-api-cache",
