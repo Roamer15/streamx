@@ -11,6 +11,7 @@ import EpisodeCard from "../components/EpisodeCard";
 import TvOverview from "../components/TvOverview";
 import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
 import SEO from "../components/SEO";
+import { upsertContinueWatching } from "../services/continueWatching";
 
 export interface Cast {
   id: number;
@@ -122,7 +123,18 @@ const TVDetailsPage = () => {
         <div className="lg:col-span-2 order-1" ref={playerSectionRef}>
           <VideoPlayer
             isPlaying={isPlayerOpen}
-            onPlayClick={() => setIsPlayerOpen(true)}
+            onPlayClick={() => {
+              upsertContinueWatching({
+                id: tvDetails.id,
+                mediaType: "tv",
+                title: tvDetails.name,
+                poster_path: tvDetails.poster_path,
+                backdrop_path: tvDetails.backdrop_path,
+                season: selectedSeason,
+                episode: selectedEpisode || 1,
+              });
+              setIsPlayerOpen(true);
+            }}
             backdropImage={backdropImage}
             title={tvDetails?.name || "Series"}
             mediaType="tv"
@@ -199,6 +211,15 @@ const TVDetailsPage = () => {
                 key={episode.id}
                 episode={episode}
                 onPlayClick={(ep) => {
+                  upsertContinueWatching({
+                    id: tvDetails.id,
+                    mediaType: "tv",
+                    title: tvDetails.name,
+                    poster_path: tvDetails.poster_path,
+                    backdrop_path: tvDetails.backdrop_path,
+                    season: selectedSeason,
+                    episode: ep.episode_number,
+                  });
                   setSelectedEpisode(ep.episode_number);
                   setIsPlayerOpen(true);
                   playerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });

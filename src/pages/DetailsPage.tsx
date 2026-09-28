@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
 import SEO from "../components/SEO";
+import { upsertContinueWatching } from "../services/continueWatching";
 
 export interface Cast {
   id: number;
@@ -208,7 +209,16 @@ export default function DetailsPage() {
         <div className="lg:col-span-2 order-1">
           <VideoPlayer
             isPlaying={isPlayerOpen}
-            onPlayClick={() => setIsPlayerOpen(true)}
+            onPlayClick={() => {
+              upsertContinueWatching({
+                id: selectedMovie.id,
+                mediaType: "movie",
+                title: selectedMovie.title,
+                poster_path: selectedMovie.poster_path,
+                backdrop_path: selectedMovie.backdrop_path,
+              });
+              setIsPlayerOpen(true);
+            }}
             backdropImage={backdropImage}
             title={selectedMovie.title}
             mediaType="movie"
