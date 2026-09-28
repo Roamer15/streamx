@@ -23,9 +23,14 @@ const OfflineBanner = () => {
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-gray-800 border border-gray-600 text-gray-200 text-sm px-4 py-2 rounded-full shadow-lg"
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-lg"
+      style={{
+        background: "#1a1919",
+        border: "1px solid rgba(72,72,71,0.25)",
+        color: "#adaaaa",
+      }}
     >
-      <WifiOff size={14} className="text-red-400 shrink-0" />
+      <WifiOff size={14} className="shrink-0" style={{ color: "#ff8d8f" }} />
       <span>You are offline. Showing cached content.</span>
     </div>
   );

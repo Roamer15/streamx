@@ -18,6 +18,7 @@ import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Favourites from "./pages/Favourites";
 import OfflineBanner from "./components/OfflineBanner";
+import InstallPrompt from "./components/InstallPrompt";
 
 function AppContent() {
   const { isSidebarOpen } = useSidebar();
@@ -46,6 +47,7 @@ function AppContent() {
       <Footer />
       <FeedbackModal isOpen={isFeedbackModalOpen} onClose={closeFeedbackModal} />
       <OfflineBanner />
+      <InstallPrompt />
     </DetailMovieProvider>
   );
 }
