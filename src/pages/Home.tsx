@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import Carousel from "../components/Carousel";
+import ContinueWatchingRow from "../components/ContinueWatchingRow";
 import { BASE_URL, API_KEY } from "../services/api";
 import { useContext } from "react";
 import { DetailMovieContext } from "../context/SideBarContextLine";
@@ -51,6 +52,8 @@ export default function Home() {
         description="Browse trending, latest, and top-rated movies and TV shows across every genre. Watch anime, K-drama, Bollywood, and more on ChwiiX."
       />
       <Hero />
+
+      <ContinueWatchingRow />
 
       <Carousel
         title="Trending Now"
