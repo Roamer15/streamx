@@ -1,15 +1,14 @@
-import { useRef, useCallback, memo, useState } from "react";
+import { useRef, useCallback, memo, useState, useMemo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { type Movie } from "../types/media.types";
 import MovieCard from "./MovieCard";
 import { MovieSkeleton } from "./MovieCardSkeleton";
+import { useNavigate } from "react-router";
+import { buildCategoryUrl, type Category } from "../data/catalog";
 
 interface CarouselProps {
-  title: string;
-  url: string;
+  category: Category;
   onMovieClick?: (movie: Movie & { media_type?: string }) => void;
-  /** Optional: highlights the last word in ruby accent */
-  accentLastWord?: boolean;
 }
 
 /** Splits title so the last word gets the ruby accent colour */
@@ -37,8 +36,11 @@ function SectionTitle({ title, accent }: { title: string; accent?: boolean }) {
   );
 }
 
-const Carousel = memo(({ title, url, onMovieClick, accentLastWord = false }: CarouselProps) => {
+const Carousel = memo(({ category, onMovieClick }: CarouselProps) => {
+  const navigate = useNavigate();
   const [isHovering, setIsHovering] = useState<boolean>(false);
+  const url = useMemo(() => buildCategoryUrl(category), [category]);
+  const { title, accentLastWord } = category;
   const { movies: raw, loading, error } = useFetchMovies(url);
   const movies: (Movie & { media_type?: string })[] = raw.slice(0, 15);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -115,6 +117,7 @@ const Carousel = memo(({ title, url, onMovieClick, accentLastWord = false }: Car
         <button
           className="text-xs font-semibold flex items-center gap-1 transition-colors hover:opacity-80"
           style={{ color: "#ff8d8f" }}
+          onClick={() => navigate(`/browse/${category.slug}`)}
         >
           View all
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
