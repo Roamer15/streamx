@@ -16,6 +16,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import FeedbackModal from "./components/FeedbackModal";
 import Movies from "./pages/Movies";
 import Series from "./pages/Series";
+import Browse from "./pages/Browse";
 import Favourites from "./pages/Favourites";
 import OfflineBanner from "./components/OfflineBanner";
 import InstallPrompt from "./components/InstallPrompt";
@@ -41,6 +42,7 @@ function AppContent() {
           <Route path="/search" element={<Search />} />
           <Route path="/movies" element={<Movies/>} />
           <Route path="/series" element={<Series/>} />
+          <Route path="/browse/:slug" element={<Browse />} />
           <Route path="/favourites" element={<Favourites />} />
         </Routes>
       </main>
