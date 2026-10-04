@@ -6,7 +6,7 @@ import { DetailMovieContext } from "../context/SideBarContextLine";
 import { useNavigate } from "react-router";
 import type { Movie } from "../types/media.types";
 import SEO from "../components/SEO";
-import { CATEGORIES, type MediaType } from "../data/catalog";
+import { CATEGORIES, buildCategoryUrl, type MediaType } from "../data/catalog";
 
 export default function Home() {
   const context = useContext(DetailMovieContext);
@@ -44,7 +44,10 @@ export default function Home() {
       {CATEGORIES.map((category) => (
         <Carousel
           key={category.slug}
-          category={category}
+          title={category.title}
+          url={buildCategoryUrl(category)}
+          accentLastWord={category.accentLastWord}
+          viewAllTo={`/browse/${category.slug}`}
           onMovieClick={(movie) => handleMovieClick(movie, category.mediaType)}
         />
       ))}
