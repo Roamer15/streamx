@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 
-// API_KEY is intentionally empty — the real key lives server-side in /api/tmdb/[...path].ts
+// API_KEY is intentionally empty — the real key lives server-side in /api/tmdb.ts
 export const API_KEY = ''
 export const BASE_URL = '/api/tmdb'
 export const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
