@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import { useTV, type TVDetails } from "../hooks/useTV";
-import { BASE_URL, API_KEY, IMAGE_PATH } from "../services/api";
+import { BASE_URL, IMAGE_PATH } from "../services/api";
 import Cast from "../components/Cast";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -36,7 +36,7 @@ const TVDetailsPage = () => {
     const fetchCast = async () => {
       try {
         setCastLoading(true);
-        const res = await fetch(`${BASE_URL}/tv/${id}/credits?api_key=${API_KEY}`);
+        const res = await fetch(`${BASE_URL}/tv/${id}/credits`);
         const data = await res.json();
         setCast(data.cast?.slice(0, 8) || []);
       } catch (err) {
@@ -265,13 +265,13 @@ const TVDetailsPage = () => {
 
       <Carousel
         title="Similar Series"
-        url={`${BASE_URL}/tv/${id}/similar?api_key=${API_KEY}`}
+        url={`${BASE_URL}/tv/${id}/similar`}
         onMovieClick={handleNavigationToSeries}
         accentLastWord
       />
       <Carousel
         title="You Might Also Like"
-        url={`${BASE_URL}/tv/${id}/recommendations?api_key=${API_KEY}`}
+        url={`${BASE_URL}/tv/${id}/recommendations`}
         onMovieClick={handleNavigationToSeries}
         accentLastWord
       />

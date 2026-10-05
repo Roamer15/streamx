@@ -1,4 +1,4 @@
-import { API_KEY, BASE_URL } from "../services/api";
+import { appendParams, BASE_URL } from "../services/api";
 
 export type MediaType = "movie" | "tv";
 
@@ -151,14 +151,8 @@ export const CATEGORIES: Category[] = [
 ];
 
 export function buildCategoryUrl(category: Category): string {
-  let url = `${BASE_URL}${category.path}?api_key=${API_KEY}`;
-  const params = category.params;
-  if (params) {
-    for (const key of Object.keys(params)) {
-      url += `&${key}=${params[key]}`;
-    }
-  }
-  return url;
+  const url = `${BASE_URL}${category.path}`;
+  return appendParams(url, category.params ?? {});
 }
 
 export function getCategory(slug: string | undefined): Category | undefined {

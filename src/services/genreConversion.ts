@@ -1,10 +1,10 @@
 import type { GenreData } from "../types/media.types";
-import { API_KEY, BASE_URL } from "./api";
+import { BASE_URL } from "./api";
 
 let cachedGenres: GenreData[] | null = null;
 
 export async function fetchGenres(): Promise<GenreData[]> {
-  const response = await fetch(`${BASE_URL}/genre/movie/list?language=en&api_key=${API_KEY}`);
+  const response = await fetch(`${BASE_URL}/genre/movie/list?language=en`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { API_KEY, BASE_URL } from '../services/api';
+import { BASE_URL } from '../services/api';
 
 export interface TVSeason {
   air_date: string;
@@ -73,7 +73,7 @@ export const useTV = (tvId: number | string): UseTVReturn => {
         setLoading(true);
         setError(null);
 
-        const url = `${BASE_URL}/tv/${tvId}?api_key=${API_KEY}`;
+        const url = `${BASE_URL}/tv/${tvId}`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -107,7 +107,7 @@ export const useTV = (tvId: number | string): UseTVReturn => {
         setLoading(true);
         setError(null);
 
-        const url = `${BASE_URL}/tv/${tvId}/season/${selectedSeason}?api_key=${API_KEY}`;
+        const url = `${BASE_URL}/tv/${tvId}/season/${selectedSeason}`;
         const response = await fetch(url);
 
         if (!response.ok) {

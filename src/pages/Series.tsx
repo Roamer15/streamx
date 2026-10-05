@@ -1,8 +1,8 @@
 import MediaGridPage from "../components/MediaGridPage";
-import { API_KEY, BASE_URL } from "../services/api";
+import { BASE_URL } from "../services/api";
 
 export default function Series() {
-  const url = `${BASE_URL}/discover/tv?api_key=${API_KEY}`;
+  const url = `${BASE_URL}/discover/tv`;
 
   return (
     <MediaGridPage

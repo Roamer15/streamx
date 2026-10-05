@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
-import { API_KEY, BASE_URL, IMAGE_PATH } from "../services/api";
+import { BASE_URL, IMAGE_PATH } from "../services/api";
 import { type Movie } from "../types/media.types";
 import { genreConversion } from "../services/genreConversion";
 import { useNavigate } from "react-router";
 
 const Hero = () => {
-  const latestMoviesUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`;
+  const latestMoviesUrl = `${BASE_URL}/movie/now_playing`;
   const { movies: heroMovies, loading, error } = useFetchMovies(latestMoviesUrl);
   const navigate = useNavigate()
   const movies: Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);

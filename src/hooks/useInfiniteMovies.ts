@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchMovies } from "../services/api";
+import { appendParams, fetchMovies } from "../services/api";
 import type { Movie } from "../types/media.types";
 
 const useInfiniteMovies = (baseUrl: string) => {
@@ -26,7 +26,7 @@ const useInfiniteMovies = (baseUrl: string) => {
       setError(null);
 
       try {
-        const data = await fetchMovies(`${baseUrl}&page=${page}`);
+        const data = await fetchMovies(appendParams(baseUrl, { page }));
         if (cancelled) return;
         if (data) {
           setMovies((prev) => (page === 1 ? data.results : [...prev, ...data.results]));
