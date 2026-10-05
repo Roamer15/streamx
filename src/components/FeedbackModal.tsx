@@ -1,6 +1,6 @@
 import {useState } from 'react'
 import { X, Send, Star } from 'lucide-react';
-import { supabase } from '../services/api';
+import { supabase } from '../services/supabase';
 
 interface FeedbackModalProps {
   isOpen: boolean;
