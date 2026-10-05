@@ -117,7 +117,7 @@ const Carousel = memo(({ title, url, onMovieClick, accentLastWord = false, viewA
         <SectionTitle title={title} accent={accentLastWord} />
         {viewAllTo && (
           <button
-            className="text-xs font-semibold flex items-center gap-1 transition-colors hover:opacity-80"
+            className="text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer hover:opacity-80"
             style={{ color: "#ff8d8f" }}
             onClick={() => navigate(viewAllTo)}
           >
