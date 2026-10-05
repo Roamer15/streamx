@@ -1,29 +1,40 @@
 // Flat file, no bracket/dynamic filename: Vercel's Function router fails to resolve
 // a dynamic catch-all filename nested in a subdirectory outside Next.js (confirmed via api/tmdb.ts).
+import { CATEGORIES } from '../src/data/catalog';
+
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const SITE_URL = 'https://chwiix.vercel.app';
 const PAGES_PER_CATEGORY = 10;
 
-async function fetchIds(path: string, apiKey: string): Promise<number[]> {
-  const ids: number[] = [];
-  for (let page = 1; page <= PAGES_PER_CATEGORY; page++) {
-    try {
-      const res = await fetch(`${TMDB_BASE}${path}?api_key=${apiKey}&page=${page}`);
-      if (!res.ok) break;
-      const data = await res.json();
-      const results = data.results ?? [];
-      if (results.length === 0) break;
-      ids.push(...results.map((item: { id: number }) => item.id));
-    } catch {
-      break;
-    }
+async function fetchPage(path: string, apiKey: string, page: number): Promise<number[]> {
+  try {
+    const res = await fetch(`${TMDB_BASE}${path}?api_key=${apiKey}&page=${page}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const results = data.results ?? [];
+    return results.map((item: { id: number }) => item.id);
+  } catch {
+    return [];
   }
-  return ids;
+}
+
+async function fetchIds(path: string, apiKey: string): Promise<number[]> {
+  const pages = await Promise.all(
+    Array.from({ length: PAGES_PER_CATEGORY }, (_, i) => fetchPage(path, apiKey, i + 1))
+  );
+  const ids = pages.flat();
+  return Array.from(new Set(ids));
 }
 
 export async function GET() {
   const apiKey = process.env.TMDB_API_KEY;
-  const staticUrls = ['', '/movies', '/series', '/search'];
+  const staticUrls = [
+    '',
+    '/movies',
+    '/series',
+    '/search',
+    ...CATEGORIES.map((category) => `/browse/${category.slug}`),
+  ];
 
   let movieIds: number[] = [];
   let tvIds: number[] = [];

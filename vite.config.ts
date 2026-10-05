@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
         ],
       },
       workbox: {
+        navigateFallbackDenylist: [/^\/api\//, /^\/sitemap\.xml$/, /^\/robots\.txt$/],
         runtimeCaching: [
           // TMDB requests go through this project's own same-origin proxy at /api/tmdb,
           // not directly to api.themoviedb.org — match the proxy path, not the TMDB domain.
