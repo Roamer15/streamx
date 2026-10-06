@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { DetailMovieContext } from "../context/SideBarContextLine";
-import { BASE_URL, IMAGE_PATH } from "../services/api";
+import { BASE_URL, tmdbImage } from "../services/api";
 import DetailsHero from "../components/DetailsHero";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -202,7 +202,7 @@ export default function DetailsPage() {
       <SEO
         title={`${selectedMovie.title} (${releaseYear}) - Watch Online | ChwiiX`}
         description={selectedMovie.overview ? selectedMovie.overview.slice(0, 160) : `Watch ${selectedMovie.title} online on ChwiiX.`}
-        image={selectedMovie.backdrop_path ? `${IMAGE_PATH}${selectedMovie.backdrop_path}` : undefined}
+        image={tmdbImage(selectedMovie.backdrop_path, "w1280")}
         type="video.movie"
       />
       <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">

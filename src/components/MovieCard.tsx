@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 import { type Movie } from "../types/media.types";
 
 interface MovieCardProps {
@@ -38,12 +38,13 @@ const MovieCard = memo(
           {/* Poster image */}
           <img
             src={
-              finalImagePath
-                ? `${IMAGE_PATH}${finalImagePath}`
-                : "https://as1.ftcdn.net/jpg/01/98/91/58/1000_F_198915813_Ad1GiheMzaJU9tN8xPbonxTvr9UDeOJe.webp"
+              tmdbImage(finalImagePath, "w342") ??
+              "https://as1.ftcdn.net/jpg/01/98/91/58/1000_F_198915813_Ad1GiheMzaJU9tN8xPbonxTvr9UDeOJe.webp"
             }
             alt={title}
             className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-75"
+            loading="lazy"
+            decoding="async"
           />
 
           {/* Permanent bottom gradient for text legibility */}

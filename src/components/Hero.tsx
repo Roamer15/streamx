@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
-import { BASE_URL, IMAGE_PATH } from "../services/api";
+import { BASE_URL, tmdbImage } from "../services/api";
 import { type Movie } from "../types/media.types";
 import { genreConversion } from "../services/genreConversion";
 import { useNavigate } from "react-router";
@@ -110,10 +110,11 @@ const Hero = () => {
           style={{ opacity: index === currentIndex ? 1 : 0 }}
         >
           <img
-            src={`${IMAGE_PATH}${movie.backdrop_path}`}
+            src={tmdbImage(movie.backdrop_path, "w1280")}
             alt={movie.title}
             className="w-full h-full object-cover"
             style={{ filter: "brightness(0.55)" }}
+            fetchPriority="high"
           />
         </div>
       ))}

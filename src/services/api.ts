@@ -1,4 +1,5 @@
-export { BASE_URL, IMAGE_PATH, appendParams } from './config';
+export { BASE_URL, tmdbImage, appendParams } from './config';
+export type { TmdbImageSize } from './config';
 export const MEDIA_PATH = import.meta.env.VITE_BASE_MEDIA_URL
 
 export const fetchMovies = async(URL: string) => {

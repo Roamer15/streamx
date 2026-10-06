@@ -1,5 +1,5 @@
 import type { TVDetails } from "../hooks/useTV";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 
 interface OverviewProp {
   tvDetails: TVDetails;
@@ -55,10 +55,12 @@ export default function TvOverview({ tvDetails }: OverviewProp) {
               >
                 {network.logo_path ? (
                   <img
-                    src={`${IMAGE_PATH}${network.logo_path}`}
+                    src={tmdbImage(network.logo_path, "w154")}
                     alt={network.name}
                     className="h-7 object-contain"
                     style={{ filter: "brightness(0) invert(1)" }}
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <p className="text-sm text-white">{network.name}</p>

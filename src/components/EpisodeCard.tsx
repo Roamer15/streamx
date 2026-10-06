@@ -1,5 +1,5 @@
 import type { TVEpisode } from "../hooks/useTV";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 
 interface EpisodeProp {
   episode: TVEpisode;
@@ -21,10 +21,12 @@ export default function EpisodeCard({ episode, onPlayClick }: EpisodeProp) {
       {/* Still image */}
       {episode.still_path && (
         <img
-          src={`${IMAGE_PATH}${episode.still_path}`}
+          src={tmdbImage(episode.still_path, "w300")}
           alt={episode.name}
           className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:brightness-50"
           style={{ opacity: 0.7 }}
+          loading="lazy"
+          decoding="async"
         />
       )}
 

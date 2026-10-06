@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 import type { Movie } from "../types/media.types";
 
 export default function Favourites() {
@@ -132,9 +132,11 @@ export default function Favourites() {
                   onClick={() => handleClick(item)}
                 >
                   <img
-                    src={`${IMAGE_PATH}${item.poster_path || item.backdrop_path}`}
+                    src={tmdbImage(item.poster_path || item.backdrop_path, "w342")}
                     alt={item.title || "Poster"}
                     className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-75 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
                   />
                   {/* Bottom gradient */}
                   <div

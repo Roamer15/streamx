@@ -1,5 +1,5 @@
 import type { Cast } from "../pages/DetailsPage";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 
 interface CastProp {
   actor: Cast;
@@ -21,9 +21,11 @@ export default function Cast({ actor }: CastProp) {
       >
         {actor.profile_path ? (
           <img
-            src={`${IMAGE_PATH}${actor.profile_path}`}
+            src={tmdbImage(actor.profile_path, "w185")}
             alt={actor.name}
             className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
+            loading="lazy"
+            decoding="async"
           />
         ) : (
           <div
