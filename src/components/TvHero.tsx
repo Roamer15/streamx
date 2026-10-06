@@ -1,4 +1,4 @@
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 import { type TVDetails } from "../hooks/useTV";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export default function TvHero({
       {/* Poster thumbnail */}
       {tvDetails.poster_path && (
         <img
-          src={`${IMAGE_PATH}${tvDetails.poster_path}`}
+          src={tmdbImage(tvDetails.poster_path, "w342")}
           alt={tvDetails.name}
           className="hidden md:block w-36 shrink-0 object-cover"
           style={{

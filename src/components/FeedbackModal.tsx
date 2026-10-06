@@ -1,6 +1,6 @@
 import {useState } from 'react'
 import { X, Send, Star } from 'lucide-react';
-import { supabase } from '../services/api';
+import { submitFeedback } from '../services/feedback';
 
 interface FeedbackModalProps {
   isOpen: boolean;
@@ -31,7 +31,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
     setLoading(true);
     try {
-      await supabase.from('feedback').insert({
+      await submitFeedback({
         email: email || null,
         rating,
         message

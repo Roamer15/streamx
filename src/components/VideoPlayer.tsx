@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { embedProviders, DEFAULT_PROVIDER_ID } from "../services/embedProviders";
-import { IMAGE_PATH } from "../services/api";
+import { tmdbImage } from "../services/api";
 
 interface VideoPlayerProps {
   isPlaying: boolean;
@@ -66,7 +66,7 @@ export const VideoPlayer = ({
         ) : (
           <>
             <img
-              src={`${IMAGE_PATH}${backdropImage}`}
+              src={tmdbImage(backdropImage, "w1280")}
               alt={title}
               className="absolute inset-0 w-full h-full object-cover"
               style={{ filter: "brightness(0.5)" }}

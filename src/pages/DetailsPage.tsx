@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { DetailMovieContext } from "../context/SideBarContextLine";
-import { BASE_URL, API_KEY, IMAGE_PATH } from "../services/api";
+import { BASE_URL, tmdbImage } from "../services/api";
 import DetailsHero from "../components/DetailsHero";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -50,7 +50,7 @@ export default function DetailsPage() {
       setMovieLoading(true);
       setMovieNotFound(false);
       try {
-        const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
+        const res = await fetch(`${BASE_URL}/movie/${id}`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setSelectedMovie(data);
@@ -70,7 +70,7 @@ export default function DetailsPage() {
     const fetchCast = async () => {
       try {
         setCastLoading(true);
-        const res = await fetch(`${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`);
+        const res = await fetch(`${BASE_URL}/movie/${id}/credits`);
         const data = await res.json();
         setCast(data.cast?.slice(0, 8) || []);
       } catch (err) {
@@ -86,7 +86,7 @@ export default function DetailsPage() {
     if (!id) return;
     const fetchRuntime = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
+        const res = await fetch(`${BASE_URL}/movie/${id}`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setRuntime(data.runtime || null);
@@ -202,7 +202,7 @@ export default function DetailsPage() {
       <SEO
         title={`${selectedMovie.title} (${releaseYear}) - Watch Online | ChwiiX`}
         description={selectedMovie.overview ? selectedMovie.overview.slice(0, 160) : `Watch ${selectedMovie.title} online on ChwiiX.`}
-        image={selectedMovie.backdrop_path ? `${IMAGE_PATH}${selectedMovie.backdrop_path}` : undefined}
+        image={tmdbImage(selectedMovie.backdrop_path, "w1280")}
         type="video.movie"
       />
       <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
@@ -268,13 +268,13 @@ export default function DetailsPage() {
       {/* Similar & Recommendations */}
       <Carousel
         title="Similar Movies"
-        url={`${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}`}
+        url={`${BASE_URL}/movie/${id}/similar`}
         onMovieClick={handleMovieClick}
         accentLastWord
       />
       <Carousel
         title="You Might Also Like"
-        url={`${BASE_URL}/movie/${id}/recommendations?api_key=${API_KEY}`}
+        url={`${BASE_URL}/movie/${id}/recommendations`}
         onMovieClick={handleMovieClick}
         accentLastWord
       />

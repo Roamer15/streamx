@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchMovies } from "../services/api";
+import { appendParams, fetchMovies } from "../services/api";
 import type { Movie } from "../types/media.types";
 
 const useFetchMovies = (baseUrl: string) => {
@@ -15,7 +15,7 @@ const useFetchMovies = (baseUrl: string) => {
 
     try {
       // Assuming your API service handles URL params, or append it here:
-      const fetchUrl = `${baseUrl}&page=${page}`;
+      const fetchUrl = appendParams(baseUrl, { page });
       
       const data = await fetchMovies(fetchUrl);
       

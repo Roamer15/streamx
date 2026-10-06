@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { API_KEY, BASE_URL } from "../services/api";
+import { appendParams, BASE_URL } from "../services/api";
 import type { Movie } from "../types/media.types";
 
 interface UseSearchReturn {
@@ -58,9 +58,7 @@ export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
     setError(null);
 
     try {
-      const url = `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(
-        query
-      )}&page=${page}`;
+      const url = appendParams(`${BASE_URL}/search/multi`, { query, page });
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

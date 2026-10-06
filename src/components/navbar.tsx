@@ -3,6 +3,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import { useCallback, useRef, useEffect } from "react";
 import { useSearch } from "../hooks/useSearch";
 import type { Movie } from "../types/media.types";
+import { tmdbImage } from "../services/api";
 
 const Navbar = () => {
   const { toggleSidebar } = useSidebar();
@@ -201,9 +202,11 @@ const Navbar = () => {
                         >
                           {result.poster_path && (
                             <img
-                              src={`https://image.tmdb.org/t/p/w92${result.poster_path}`}
+                              src={tmdbImage(result.poster_path, "w92")}
                               alt={result.title}
                               className="w-9 h-14 object-cover rounded-lg shrink-0"
+                              loading="lazy"
+                              decoding="async"
                             />
                           )}
                           <div className="flex-1 min-w-0">

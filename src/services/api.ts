@@ -1,17 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-
-
-// API_KEY is intentionally empty — the real key lives server-side in /api/tmdb/[...path].ts
-export const API_KEY = ''
-export const BASE_URL = '/api/tmdb'
-export const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
+export { BASE_URL, tmdbImage, appendParams } from './config';
+export type { TmdbImageSize } from './config';
 export const MEDIA_PATH = import.meta.env.VITE_BASE_MEDIA_URL
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseKey)
-
 
 export const fetchMovies = async(URL: string) => {
     try {

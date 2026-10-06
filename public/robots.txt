@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /login
-Disallow: /signup
 Disallow: /favourites
 
 Sitemap: https://chwiix.vercel.app/sitemap.xml
