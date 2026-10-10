@@ -1,8 +1,8 @@
-import type { Cast } from "../pages/DetailsPage";
+import type { CastMember } from "../types/media.types";
 import { tmdbImage } from "../services/api";
 
 interface CastProp {
-  actor: Cast;
+  actor: CastMember;
 }
 
 export default function Cast({ actor }: CastProp) {

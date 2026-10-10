@@ -1,60 +1,33 @@
-import { useState, useEffect, useCallback } from "react";
-import { appendParams, fetchMovies } from "../services/api";
-import type { Movie } from "../types/media.types";
+import { useCallback, useMemo } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { appendParams, tmdbFetch } from "../services/api";
+import { tmdbKeys } from "../services/queryKeys";
+import type { Movie, Paged } from "../types/media.types";
 
 const useInfiniteMovies = (baseUrl: string) => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const { data, isPending, isFetchingNextPage, error, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: tmdbKeys.infinite(baseUrl),
+      queryFn: ({ pageParam, signal }) =>
+        tmdbFetch<Paged<Movie>>(appendParams(baseUrl, { page: pageParam }), signal),
+      initialPageParam: 1,
+      getNextPageParam: (last) => (last.page < last.total_pages ? last.page + 1 : undefined),
+    });
 
-  useEffect(() => {
-    setMovies([]);
-    setPage(1);
-    setTotalPages(0);
-    setError(null);
-  }, [baseUrl]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const load = async () => {
-      if (page === 1) setLoading(true);
-      else setLoadingMore(true);
-      setError(null);
-
-      try {
-        const data = await fetchMovies(appendParams(baseUrl, { page }));
-        if (cancelled) return;
-        if (data) {
-          setMovies((prev) => (page === 1 ? data.results : [...prev, ...data.results]));
-          setTotalPages(data.total_pages || 0);
-        }
-      } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to fetch movies");
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-          setLoadingMore(false);
-        }
-      }
-    };
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [baseUrl, page]);
-
-  const hasMore = page < totalPages;
+  const movies = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data]);
 
   const loadMore = useCallback(() => {
-    if (page < totalPages) setPage((p) => p + 1);
-  }, [page, totalPages]);
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  return { movies, loading, loadingMore, error, hasMore, loadMore };
+  return {
+    movies,
+    loading: isPending,
+    loadingMore: isFetchingNextPage,
+    error: error?.message ?? null,
+    hasMore: hasNextPage,
+    loadMore,
+  };
 };
 
 export default useInfiniteMovies;

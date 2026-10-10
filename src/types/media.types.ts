@@ -17,3 +17,19 @@ export interface GenreData {
     id: number,
     name: string
 }
+
+export interface Paged<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
+}
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
+
+export type MovieDetails = Movie & { runtime?: number | null };

@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { appendParams, BASE_URL } from "../services/api";
-import type { Movie } from "../types/media.types";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { appendParams, BASE_URL, tmdbFetch } from "../services/api";
+import { tmdbKeys } from "../services/queryKeys";
+import type { Movie, Paged } from "../types/media.types";
 
 interface UseSearchReturn {
   results: Movie[];
@@ -14,136 +16,72 @@ interface UseSearchReturn {
   loadMore: () => void;
 }
 
+type SearchItem = Movie & { media_type?: string };
+
+const EMPTY: Movie[] = [];
+
 /**
  * Custom hook for debounced search functionality
- * Prevents API calls on every keystroke by waiting 500ms of inactivity
+ * Prevents API calls on every keystroke by waiting for inactivity
  * @param debounceDelay - Delay in milliseconds before making API call (default: 500)
  * @returns Search state and handlers
  */
 export const useSearch = (debounceDelay: number = 500): UseSearchReturn => {
-  const [results, setResults] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isMounted = useRef(false);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  // Cleanup on unmount
   useEffect(() => {
-    isMounted.current = true; // Set to true on every mount
+    const delay = searchQuery.trim() ? debounceDelay : 0;
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), delay);
+    return () => clearTimeout(timer);
+  }, [searchQuery, debounceDelay]);
 
-    return () => {
-      isMounted.current = false; // Set to false on unmount
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-    };
-  }, []);
+  const query = searchQuery.trim() ? debouncedQuery.trim() : "";
+  const enabled = query.length > 0;
 
-  // Perform the actual search
-  const performSearch = useCallback(async (query: string, page: number = 1) => {
-    if (!query.trim()) {
-      setResults([]);
-      setError(null);
-      setTotalPages(0);
-      setCurrentPage(1);
-      return;
-    }
+  const { data, isPending, isFetchingNextPage, error, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: tmdbKeys.search(query),
+      queryFn: ({ pageParam, signal }) =>
+        tmdbFetch<Paged<SearchItem>>(
+          appendParams(`${BASE_URL}/search/multi`, { query, page: pageParam }),
+          signal
+        ),
+      initialPageParam: 1,
+      getNextPageParam: (last) => (last.page < last.total_pages ? last.page + 1 : undefined),
+      enabled,
+    });
 
-    if (page === 1) setLoading(true);
-    else setLoadingMore(true);
-    setError(null);
-
-    try {
-      const url = appendParams(`${BASE_URL}/search/multi`, { query, page });
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (isMounted.current) {
-        // Filter for movies and tv shows, exclude those without poster paths
-        const filteredResults = data.results.filter(
-          (item: Record<string, unknown>) =>
-            (item.media_type === "movie" || item.media_type === "tv") &&
-            item.poster_path
-        );
-
-        setResults((prev) => (page === 1 ? filteredResults : [...prev, ...filteredResults]));
-        setCurrentPage(data.page || 1);
-        setTotalPages(data.total_pages || 0);
-      }
-    } catch (err) {
-      if (isMounted.current) {
-        setError(err instanceof Error ? err.message : "Failed to search");
-        if (page === 1) {
-          setResults([]);
-          setTotalPages(0);
-        }
-      }
-    } finally {
-      if (isMounted.current) {
-        setLoading(false);
-        setLoadingMore(false);
-      }
-    }
-  }, []);
-
-  // Handle search with debouncing
-  const handleSearchInput = useCallback(
-    (query: string) => {
-      setSearchQuery(query);
-
-      // Clear previous timer
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-
-      // Set new timer
-      if (query.trim()) {
-        debounceTimer.current = setTimeout(() => {
-          performSearch(query);
-        }, debounceDelay);
-      } else {
-        setResults([]);
-        setError(null);
-      }
-    },
-    [debounceDelay, performSearch]
+  const results = useMemo(
+    () =>
+      enabled && data
+        ? data.pages.flatMap((p) =>
+            p.results.filter(
+              (item) => (item.media_type === "movie" || item.media_type === "tv") && item.poster_path
+            )
+          )
+        : EMPTY,
+    [data, enabled]
   );
 
   const clearSearch = useCallback(() => {
     setSearchQuery("");
-    setResults([]);
-    setError(null);
-    setCurrentPage(1);
-    setTotalPages(0);
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
+    setDebouncedQuery("");
   }, []);
 
-  const hasMore = currentPage < totalPages;
-
   const loadMore = useCallback(() => {
-    if (searchQuery.trim() && currentPage < totalPages) {
-      performSearch(searchQuery, currentPage + 1);
-    }
-  }, [searchQuery, currentPage, totalPages, performSearch]);
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return {
     results,
-    loading,
-    loadingMore,
-    error,
+    loading: enabled && isPending,
+    loadingMore: isFetchingNextPage,
+    error: enabled ? (error?.message ?? null) : null,
     searchQuery,
-    setSearchQuery: handleSearchInput,
+    setSearchQuery,
     clearSearch,
-    hasMore,
+    hasMore: enabled && !!hasNextPage,
     loadMore,
   };
 };

@@ -2,9 +2,10 @@ import { useParams, useNavigate } from "react-router";
 import { useTV, type TVDetails } from "../hooks/useTV";
 import { BASE_URL, tmdbImage } from "../services/api";
 import Cast from "../components/Cast";
+import { useCredits } from "../hooks/useCredits";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import type { Movie } from "../types/media.types";
 import TvHero from "../components/TvHero";
 import EpisodeCard from "../components/EpisodeCard";
@@ -13,46 +14,23 @@ import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
 import SEO from "../components/SEO";
 import { upsertContinueWatching } from "../services/continueWatching";
 
-export interface Cast {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string | null;
-}
-
 const TVDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tvDetails, episodes, selectedSeason, setSelectedSeason, loading, error } = useTV(id!);
-  const [cast, setCast] = useState<Cast[]>([]);
-  const [castLoading, setCastLoading] = useState(true);
+  const { tvDetails, episodes, selectedSeason, setSelectedSeason, loading, episodesLoading, error } = useTV(id!);
+  const { cast, loading: castLoading } = useCredits("tv", id);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState<number | null>(null);
-  const [isInFavourites, setIsInFavourites] = useState(false);
+  const [favouritesVersion, setFavouritesVersion] = useState(0);
   const playerSectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!id) return;
-    const fetchCast = async () => {
-      try {
-        setCastLoading(true);
-        const res = await fetch(`${BASE_URL}/tv/${id}/credits`);
-        const data = await res.json();
-        setCast(data.cast?.slice(0, 8) || []);
-      } catch (err) {
-        console.error("Error fetching cast:", err);
-      } finally {
-        setCastLoading(false);
-      }
-    };
-    fetchCast();
-  }, [id]);
-
-  useEffect(() => {
-    if (!tvDetails) return;
+  // favouritesVersion forces a re-render after localStorage changes
+  void favouritesVersion;
+  const isInFavourites = (() => {
+    if (!tvDetails) return false;
     const favourites = JSON.parse(localStorage.getItem("favourites") || "[]");
-    setIsInFavourites(favourites.some((item: TVDetails) => item.id === tvDetails.id));
-  }, [tvDetails]);
+    return favourites.some((item: TVDetails) => item.id === tvDetails.id);
+  })();
 
   const handleNavigationToSeries = (series: Movie & { media_type?: string }) => {
     navigate(`/details/tv/${series.id}`);
@@ -65,12 +43,12 @@ const TVDetailsPage = () => {
     if (!inFav) {
       favourites.push(tvDetails);
       localStorage.setItem("favourites", JSON.stringify(favourites));
-      setIsInFavourites(true);
+      setFavouritesVersion((v) => v + 1);
       alert(`✓ Added to favourites: ${tvDetails.name}`);
     } else {
       const updated = favourites.filter((item: TVDetails) => item.id !== tvDetails.id);
       localStorage.setItem("favourites", JSON.stringify(updated));
-      setIsInFavourites(false);
+      setFavouritesVersion((v) => v + 1);
       alert(`✓ Removed from favourites: ${tvDetails.name}`);
     }
   };
@@ -204,7 +182,14 @@ const TVDetailsPage = () => {
         </div>
 
         {/* Episodes grid */}
-        {episodes.length > 0 ? (
+        {episodesLoading ? (
+          <div className="flex items-center justify-center h-32">
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2"
+              style={{ borderColor: "#ff8d8f" }}
+            />
+          </div>
+        ) : episodes.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {episodes.map((episode) => (
               <EpisodeCard

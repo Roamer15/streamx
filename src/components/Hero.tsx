@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import useFetchMovies from "../hooks/useFetchMovies";
 import { BASE_URL, tmdbImage } from "../services/api";
 import { type Movie } from "../types/media.types";
-import { genreConversion } from "../services/genreConversion";
+import { useGenres } from "../hooks/useGenres";
 import { useNavigate } from "react-router";
 
 const Hero = () => {
@@ -12,7 +12,17 @@ const Hero = () => {
   const movies: Movie[] = useMemo(() => heroMovies.slice(0, 10), [heroMovies]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const [genreMap, setGenreMap] = useState<Record<number, string[]>>({});
+  const { data: genres } = useGenres();
+  const genreMap = useMemo(() => {
+    const map: Record<number, string[]> = {};
+    if (!genres) return map;
+    for (const movie of movies) {
+      map[movie.id] = movie.genre_ids
+        .map((gid) => genres.get(gid))
+        .filter((name): name is string => Boolean(name));
+    }
+    return map;
+  }, [movies, genres]);
 
   useEffect(() => {
     if (isHovering || movies.length === 0) return;
@@ -21,22 +31,6 @@ const Hero = () => {
     }, 7000);
     return () => clearInterval(interval);
   }, [movies.length, isHovering]);
-
-  useEffect(() => {
-    if (movies.length === 0) return;
-    let isMounted = true;
-    async function loadGenres() {
-      const entries = await Promise.all(
-        movies.map(async (movie) => {
-          const names = await genreConversion(movie.genre_ids);
-          return [movie.id, names];
-        })
-      );
-      if (isMounted) setGenreMap(Object.fromEntries(entries));
-    }
-    loadGenres();
-    return () => { isMounted = false; };
-  }, [movies]);
 
   const handleNavigation = (id:number) => {
     navigate(`details/movie/${id}`)
