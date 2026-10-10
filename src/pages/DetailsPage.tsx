@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { DetailMovieContext } from "../context/SideBarContextLine";
 import { BASE_URL, tmdbImage } from "../services/api";
@@ -7,18 +7,13 @@ import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
 import type { Movie } from "../types/media.types";
 import Cast from "../components/Cast";
+import { useCredits } from "../hooks/useCredits";
+import { useMovieDetails } from "../hooks/useMovieDetails";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import TvDetailsSkeletonLoader from "../components/TvDetailsSkeletonLoader";
 import SEO from "../components/SEO";
 import { upsertContinueWatching } from "../services/continueWatching";
-
-export interface Cast {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string | null;
-}
 
 export default function DetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,95 +24,34 @@ export default function DetailsPage() {
   if (!context) throw new Error("DetailMovieContext must be used within a provider");
 
   const { selectedMovie, setSelectedMovie } = context;
-  const [cast, setCast] = useState<Cast[]>([]);
-  const [castLoading, setCastLoading] = useState(true);
-  const [runtime, setRuntime] = useState<number | null>(null);
-  const [isInFavourites, setIsInFavourites] = useState(false);
+  const [favouritesVersion, setFavouritesVersion] = useState(0);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
-  const [movieLoading, setMovieLoading] = useState(true);
-  const [movieNotFound, setMovieNotFound] = useState(false);
+  const { data: movie, isPending, isError, isPlaceholderData } = useMovieDetails(id, selectedMovie);
+  const { cast, loading: castLoading } = useCredits("movie", id);
+  const runtime = isPlaceholderData ? null : movie?.runtime ?? null;
 
-  useEffect(() => {
-    if (selectedMovie && id && parseInt(id) === selectedMovie.id) {
-      setMovieLoading(false);
-      return;
-    }
-    if (!id) {
-      setMovieLoading(false);
-      return;
-    }
-    const fetchMovieDetails = async () => {
-      setMovieLoading(true);
-      setMovieNotFound(false);
-      try {
-        const res = await fetch(`${BASE_URL}/movie/${id}`);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        setSelectedMovie(data);
-        setMovieNotFound(false);
-      } catch (err) {
-        console.error("Error fetching movie details:", err);
-        setMovieNotFound(true);
-      } finally {
-        setMovieLoading(false);
-      }
-    };
-    fetchMovieDetails();
-  }, [id, selectedMovie, setSelectedMovie]);
-
-  useEffect(() => {
-    if (!id) return;
-    const fetchCast = async () => {
-      try {
-        setCastLoading(true);
-        const res = await fetch(`${BASE_URL}/movie/${id}/credits`);
-        const data = await res.json();
-        setCast(data.cast?.slice(0, 8) || []);
-      } catch (err) {
-        console.error("Error fetching cast:", err);
-      } finally {
-        setCastLoading(false);
-      }
-    };
-    fetchCast();
-  }, [id]);
-
-  useEffect(() => {
-    if (!id) return;
-    const fetchRuntime = async () => {
-      try {
-        const res = await fetch(`${BASE_URL}/movie/${id}`);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        setRuntime(data.runtime || null);
-      } catch (err) {
-        console.error("Error fetching runtime:", err);
-        setRuntime(null);
-      }
-    };
-    fetchRuntime();
-  }, [id]);
-
-  useEffect(() => {
-    if (!selectedMovie) return;
+  // favouritesVersion forces a re-render after localStorage changes
+  void favouritesVersion;
+  const isInFavourites = (() => {
+    if (!movie) return false;
     const favourites = JSON.parse(localStorage.getItem("favourites") || "[]");
-    setIsInFavourites(favourites.some((item: Movie) => item.id === selectedMovie.id));
-  }, [selectedMovie]);
+    return favourites.some((item: Movie) => item.id === movie.id);
+  })();
 
   const handleToggleFavourites = () => {
-    if (!selectedMovie) return;
+    if (!movie) return;
     const favourites = JSON.parse(localStorage.getItem("favourites") || "[]");
-    const inFav = favourites.some((item: Movie) => item.id === selectedMovie.id);
+    const inFav = favourites.some((item: Movie) => item.id === movie.id);
     if (!inFav) {
-      favourites.push(selectedMovie);
+      favourites.push(movie);
       localStorage.setItem("favourites", JSON.stringify(favourites));
-      setIsInFavourites(true);
+      setFavouritesVersion((v) => v + 1);
       mySwal.fire({
         html: (
           <div style={{ fontFamily: "'Manrope', sans-serif", display: "flex", alignItems: "center", gap: "8px"}}>
             <div style={{ fontSize: "0.75rem", marginBottom: "4px" }}>❤️</div>
             <div style={{ color: "#ff8d8f", fontWeight: 700, fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>Added to Favourites</div>
-            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom:"4px"}}>{selectedMovie.title}</div>
+            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom:"4px"}}>{movie.title}</div>
           </div>
         ),
         showConfirmButton: false,
@@ -128,15 +62,15 @@ export default function DetailsPage() {
         customClass: { popup: "swal-cinematic-toast" },
       });
     } else {
-      const updated = favourites.filter((item: Movie) => item.id !== selectedMovie.id);
+      const updated = favourites.filter((item: Movie) => item.id !== movie.id);
       localStorage.setItem("favourites", JSON.stringify(updated));
-      setIsInFavourites(false);
+      setFavouritesVersion((v) => v + 1);
       mySwal.fire({
         html: (
           <div style={{ fontFamily: "'Manrope', sans-serif", textAlign: "center", display: "flex", alignItems: "center", gap: "8px" }}>
             <div style={{ fontSize: "0.75rem", marginBottom: "4px" }}>🗑️</div>
             <div style={{ color: "#adaaaa", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>Removed from Favourites</div>
-            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom: "4px" }}>{selectedMovie.title}</div>
+            <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.75rem", marginBottom: "4px" }}>{movie.title}</div>
           </div>
         ),
         background: "rgba(19,19,19,0.92)",
@@ -156,14 +90,14 @@ export default function DetailsPage() {
   };
 
   // Loading state
-  if (movieLoading) {
+  if (isPending) {
     return (
       <TvDetailsSkeletonLoader/>
     );
   }
 
   // Not found
-  if (movieNotFound || !selectedMovie) {
+  if (isError || !movie) {
     return (
       <div
         className="min-h-screen flex items-center justify-center px-4"
@@ -194,15 +128,15 @@ export default function DetailsPage() {
     );
   }
 
-  const backdropImage = selectedMovie.backdrop_path || selectedMovie.poster_path;
-  const releaseYear = selectedMovie.release_date?.split("-")[0] || "N/A";
+  const backdropImage = movie.backdrop_path || movie.poster_path;
+  const releaseYear = movie.release_date?.split("-")[0] || "N/A";
 
   return (
     <div style={{ background: "#0e0e0e" }}>
       <SEO
-        title={`${selectedMovie.title} (${releaseYear}) - Watch Online | ChwiiX`}
-        description={selectedMovie.overview ? selectedMovie.overview.slice(0, 160) : `Watch ${selectedMovie.title} online on ChwiiX.`}
-        image={tmdbImage(selectedMovie.backdrop_path, "w1280")}
+        title={`${movie.title} (${releaseYear}) - Watch Online | ChwiiX`}
+        description={movie.overview ? movie.overview.slice(0, 160) : `Watch ${movie.title} online on ChwiiX.`}
+        image={tmdbImage(movie.backdrop_path, "w1280")}
         type="video.movie"
       />
       <div className="px-6 md:px-14 pt-8 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
@@ -211,23 +145,23 @@ export default function DetailsPage() {
             isPlaying={isPlayerOpen}
             onPlayClick={() => {
               upsertContinueWatching({
-                id: selectedMovie.id,
+                id: movie.id,
                 mediaType: "movie",
-                title: selectedMovie.title,
-                poster_path: selectedMovie.poster_path,
-                backdrop_path: selectedMovie.backdrop_path,
+                title: movie.title,
+                poster_path: movie.poster_path,
+                backdrop_path: movie.backdrop_path,
               });
               setIsPlayerOpen(true);
             }}
             backdropImage={backdropImage}
-            title={selectedMovie.title}
+            title={movie.title}
             mediaType="movie"
             tmdbId={id!}
           />
         </div>
         <div className="lg:col-span-1 order-2">
           <DetailsHero
-            selectedMovie={selectedMovie}
+            selectedMovie={movie}
             runtime={runtime}
             releaseYear={releaseYear}
             handleToggleFavourites={handleToggleFavourites}

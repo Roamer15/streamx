@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { BASE_URL } from '../services/api';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { BASE_URL, tmdbFetch } from '../services/api';
+import { tmdbKeys } from '../services/queryKeys';
 
 export interface TVSeason {
   air_date: string;
@@ -50,102 +52,45 @@ interface UseTVReturn {
   episodes: TVEpisode[];
   selectedSeason: number;
   loading: boolean;
+  episodesLoading: boolean;
   error: string | null;
   setSelectedSeason: (season: number) => void;
-  currentPage: number;
-  totalPages: number;
-  goToPage: (page: number) => void
 }
 
+const EMPTY_EPISODES: TVEpisode[] = [];
+
 export const useTV = (tvId: number | string): UseTVReturn => {
-  const [tvDetails, setTVDetails] = useState<TVDetails | null>(null);
-  const [episodes, setEpisodes] = useState<TVEpisode[]>([]);
-  const [selectedSeason, setSelectedSeason] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(0)
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const id = String(tvId);
+  const [selection, setSelection] = useState<{ tvId: string; season: number } | null>(null);
 
-  // Fetch TV series details
-  useEffect(() => {
-    const fetchTVDetails = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const details = useQuery({
+    queryKey: tmdbKeys.tv(id),
+    queryFn: ({ signal }) => tmdbFetch<TVDetails>(`${BASE_URL}/tv/${id}`, signal),
+  });
+  const tvDetails = details.data;
 
-        const url = `${BASE_URL}/tv/${tvId}`;
-        const response = await fetch(url);
+  const selectedSeason =
+    selection?.tvId === id ? selection.season : (tvDetails?.seasons[0]?.season_number ?? 0);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+  const episodesEnabled = !!tvDetails;
+  const episodes = useQuery({
+    queryKey: tmdbKeys.season(id, selectedSeason),
+    queryFn: ({ signal }) =>
+      tmdbFetch<{ episodes?: TVEpisode[] }>(`${BASE_URL}/tv/${id}/season/${selectedSeason}`, signal),
+    enabled: episodesEnabled,
+    select: (d) => d.episodes ?? [],
+  });
 
-        const data = await response.json();
-        setTVDetails(data);
-
-        setCurrentPage(data.page || 1);
-        setTotalPages(data.total_pages || 0);
-        // Set default season to first season (usually season 0 or 1)
-        setSelectedSeason(data.seasons[0]?.season_number || 0);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch TV details');
-        setTVDetails(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTVDetails();
-  }, [tvId]);
-
-  // Fetch episodes for selected season
-  useEffect(() => {
-    if (!tvDetails) return;
-
-    const fetchEpisodes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const url = `${BASE_URL}/tv/${tvId}/season/${selectedSeason}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setEpisodes(data.episodes || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch episodes');
-        setEpisodes([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEpisodes();
-  }, [tvId, selectedSeason, tvDetails]);
-
-  const goToPage = useCallback(
-      (page: number) => {
-        if (page > 0 && page <= totalPages) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      },
-      [totalPages]
-    );
+  const setSelectedSeason = (season: number) => setSelection({ tvId: id, season });
 
   return {
-    tvDetails,
-    episodes,
+    tvDetails: tvDetails ?? null,
+    episodes: episodes.data ?? EMPTY_EPISODES,
     selectedSeason,
-    loading,
-    error,
+    loading: details.isPending,
+    episodesLoading: episodes.isPending && episodesEnabled,
+    error: details.error?.message ?? null,
     setSelectedSeason,
-    currentPage,
-    goToPage,
-    totalPages
   };
 };
 
