@@ -1,4 +1,4 @@
-import { appendParams, BASE_URL } from "../services/config";
+import { appendParams, BASE_URL } from "../services/config.js";
 
 export type MediaType = "movie" | "tv";
 
