@@ -118,13 +118,6 @@ const Hero = () => {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to right, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.6) 25%, rgba(14,14,14,0.1) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
             "linear-gradient(to top, rgba(14,14,14,1) 0%, rgba(14,14,14,0.4) 30%, transparent 60%)",
         }}
       />
