@@ -45,7 +45,6 @@ const Hero = () => {
     ? new Date(currentMovie.release_date).getFullYear()
     : null;
 
-  // --- Loading state ---
   if (loading) {
     return (
       <div className="relative w-full h-[80vh] overflow-hidden" style={{ background: "#0e0e0e" }}>
@@ -69,7 +68,6 @@ const Hero = () => {
     );
   }
 
-  // --- Error state ---
   if (error) {
     return (
       <div className="relative w-full h-[80vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
@@ -149,7 +147,6 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Title — Manrope, asymmetrical editorial scale */}
           <h1
             className="font-black leading-[0.92] tracking-tight mb-5"
             style={{
