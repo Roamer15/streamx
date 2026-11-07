@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router";
 import { useTV, type TVDetails } from "../hooks/useTV";
 import { BASE_URL, tmdbImage } from "../services/api";
-import Cast from "../components/Cast";
+import CastCarousel from "../components/CastCarousel";
 import { useCredits } from "../hooks/useCredits";
 import Carousel from "../components/Carousel";
 import VideoPlayer from "../components/VideoPlayer";
@@ -219,34 +219,7 @@ const TVDetailsPage = () => {
         )}
       </div>
 
-      {/* Cast */}
-      <div className="px-6 md:px-14 py-10">
-        <h2
-          className="text-2xl font-extrabold text-white mb-7"
-          style={{ fontFamily: "'Manrope', sans-serif" }}
-        >
-          Cast
-        </h2>
-
-        {castLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <div
-              className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2"
-              style={{ borderColor: "#ff8d8f" }}
-            />
-          </div>
-        ) : cast.length > 0 ? (
-          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-            {cast.map((actor) => (
-              <Cast key={actor.id} actor={actor} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm" style={{ color: "#adaaaa" }}>
-            No cast information available.
-          </p>
-        )}
-      </div>
+      <CastCarousel cast={cast} loading={castLoading} />
 
       <Carousel
         title="Similar Series"
