@@ -23,7 +23,7 @@ export default function Cast({ actor }: CastProp) {
           <img
             src={tmdbImage(actor.profile_path, "w185")}
             alt={actor.name}
-            className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
+            className="w-full h-full object-cover group-hover:brightness-150 transition-all duration-300"
             loading="lazy"
             decoding="async"
           />
