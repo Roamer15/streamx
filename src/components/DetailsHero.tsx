@@ -105,6 +105,7 @@ export default function DetailsHero({
           </svg>
           {isInFavourites ? "In Favourites" : "Add to Favourites"}
         </button>
+        
       </div>
     </div>
   );
