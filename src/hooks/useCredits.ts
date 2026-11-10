@@ -11,7 +11,7 @@ export const useCredits = (type: "movie" | "tv", id: string | undefined) => {
     queryFn: ({ signal }) =>
       tmdbFetch<{ cast?: CastMember[] }>(`${BASE_URL}/${type}/${id}/credits`, signal),
     enabled: !!id,
-    select: (d) => d.cast?.slice(0, 8) ?? [],
+    select: (d) => d.cast ?? [],
   });
 
   return { cast: data ?? EMPTY, loading: isPending && !!id };

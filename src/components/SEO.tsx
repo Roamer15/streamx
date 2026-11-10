@@ -9,7 +9,7 @@ interface SEOProps {
 
 export default function SEO({ title, description, image, type = "website" }: SEOProps) {
   const url = typeof window !== "undefined" ? window.location.href : undefined;
-  const fallbackImage = "https://chwiix.vercel.app/chwiix.svg";
+  const fallbackImage = "https://chwiix.vercel.app/chwiiix.png";
 
   return (
     <Helmet>
@@ -24,6 +24,7 @@ export default function SEO({ title, description, image, type = "website" }: SEO
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image || fallbackImage} />
+      <link rel="canonical" href="https://chwiix.vercel.app" />.
     </Helmet>
   );
 }

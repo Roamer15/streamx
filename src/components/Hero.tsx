@@ -45,7 +45,6 @@ const Hero = () => {
     ? new Date(currentMovie.release_date).getFullYear()
     : null;
 
-  // --- Loading state ---
   if (loading) {
     return (
       <div className="relative w-full h-[80vh] overflow-hidden" style={{ background: "#0e0e0e" }}>
@@ -69,7 +68,6 @@ const Hero = () => {
     );
   }
 
-  // --- Error state ---
   if (error) {
     return (
       <div className="relative w-full h-[80vh] flex items-center justify-center" style={{ background: "#0e0e0e" }}>
@@ -118,13 +116,6 @@ const Hero = () => {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to right, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.6) 25%, rgba(14,14,14,0.1) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
             "linear-gradient(to top, rgba(14,14,14,1) 0%, rgba(14,14,14,0.4) 30%, transparent 60%)",
         }}
       />
@@ -156,7 +147,6 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Title — Manrope, asymmetrical editorial scale */}
           <h1
             className="font-black leading-[0.92] tracking-tight mb-5"
             style={{

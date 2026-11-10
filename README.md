@@ -4,7 +4,7 @@ A modern, feature-rich streaming platform for discovering movies and TV shows. B
 
 ## About the Project
 
-ChwiiX is a fully functional streaming discovery application that allows users to:
+ChwiiX is a streaming discovery application that allows users to:
 - Browse trending, latest, and top-rated movies and TV shows
 - Explore content by genre (Anime, K-Drama, Bollywood, Martial Arts, Animation)
 - Search for specific movies and TV shows

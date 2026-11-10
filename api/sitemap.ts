@@ -1,6 +1,6 @@
 // Flat file, no bracket/dynamic filename: Vercel's Function router fails to resolve
 // a dynamic catch-all filename nested in a subdirectory outside Next.js (confirmed via api/tmdb.ts).
-import { CATEGORIES } from '../src/data/catalog';
+import { CATEGORIES } from '../src/data/catalog.js';
 
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const SITE_URL = 'https://chwiix.vercel.app';
