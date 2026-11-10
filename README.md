@@ -107,7 +107,7 @@ The application will open at `http://localhost:5173`
 ## Development Notes
 
 - The application uses React Context API for state management, making it lightweight and without external state management libraries
-- Custom hooks (`useFetchMovies`, `useSearch`, `useSidebar`, `useTV`) encapsulate data fetching and sidebar logic
+- Custom hooks (`useFetchMovies`, `useSearch`, `useTV`) encapsulate data fetching and sidebar logic
 - The codebase is fully typed with TypeScript for better developer experience and fewer runtime errors
 - Tailwind CSS is used for styling, with responsive classes for mobile, tablet, and desktop layouts
 
