@@ -23,6 +23,7 @@ The project is built as part of the RebaseCodeCamp 2026 bootcamp, showcasing mod
 - **TV Show Support**: Full support for TV series with episode tracking and season information
 - **Video Player**: Integrated video player for watching trailers
 - **Navigation**: Smooth routing with React Router for seamless navigation
+- **Offline Support**: Offline support with caching, PWA now available too
 
 ### Technical Architecture
 - **Frontend Framework**: React 19 with TypeScript for type-safe development
@@ -119,4 +120,3 @@ Potential features for future versions:
 - User ratings and reviews
 - Streaming provider information
 - Advanced filters and sorting options
-- Offline support with caching
