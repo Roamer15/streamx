@@ -10,7 +10,6 @@ ChwiiX is a streaming discovery application that allows users to:
 - Search for specific movies and TV shows
 - View detailed information about movies and TV shows
 - Watch trailers and videos directly in the app
-- Enjoy a responsive, user-friendly interface
 
 The project is built as part of the RebaseCodeCamp 2026 bootcamp, showcasing modern React development practices with TypeScript.
 
